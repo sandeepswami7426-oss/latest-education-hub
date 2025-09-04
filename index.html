@@ -1,104 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latest Education Hub</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; margin: 0; padding-bottom: 60px; }
-        header { background: #4CAF50; color: white; padding: 20px; font-size: 24px; }
-        nav a { margin: 0 15px; color: #333; text-decoration: none; font-weight: bold; }
-        nav { padding: 15px; background: #f0f0f0; }
-        footer { background: #222; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; }
-        img { width: 120px; margin-top: 15px; }
-        
-        /* यह नया स्टाइल कोड है */
-        main {
-            padding: 10px;
-            text-align: left; /* ताकि टेक्स्ट बॉक्स के अंदर लेफ्ट से शुरू हो */
-        }
-        .card {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 20px 10px; /* ऊपर-नीचे 20px, दाएं-बाएं 10px */
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्की सी परछाई */
-        }
-        .card h2 {
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        .card article {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .card article:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .card a {
-            color: #4CAF50;
-            font-weight: bold;
-        }
+        header { background: #4CAF50; color: white; padding: 15px; }
+        header h1 { font-size: 28px; margin: 0; }
+        header p { margin: 5px 0 0; font-size: 14px; }
+        nav { padding: 15px; background: #f0f0f0; border-bottom: 1px solid #ddd; }
+        nav a { margin: 0 10px; color: #333; text-decoration: none; font-weight: bold; font-size: 14px; }
+        footer { background: #222; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; font-size: 12px; }
+        main { padding: 10px; text-align: left; }
+        .card { background: white; border: 1px solid #ddd; padding: 15px; margin: 20px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card h2 { border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-top: 0; font-size: 20px; }
+        .card article { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .card article:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .card h4 { margin: 0 0 5px 0; font-size: 16px; }
+        .card p { margin: 0; font-size: 14px; line-height: 1.5; }
+        .card a { color: #4CAF50; font-weight: bold; text-decoration: none; font-size: 14px; }
     </style>
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Logo">
-        <h1>Latest Education Hub</h1>
+        <h1>Education Hub</h1>
         <p>Education | Jobs | Results | Current Affairs | Quizzes</p>
     </header>
 
     <nav>
-        <a href="#">Latest News</a>
-        <a href="#">Jobs</a>
-        <a href="#">Results</a>
-        <a href="#">Quizzes</a>
+        <a href="#education">Education</a>
+        <a href="#jobs">Jobs</a>
+        <a href="#results">Results</a>
+        <a href="#current-affairs">Current Affairs</a>
+        <a href="#quizzes">Quizzes</a>
     </nav>
 
-    <!-- Main Content Area -->
     <main>
-        <!-- Latest News Section -->
-        <section class="card">
-            <h2>Latest News</h2>
+        <!-- Education Section -->
+        <section id="education" class="card">
+            <h2>Education News</h2>
             <article>
-                <h4>परीक्षा परिणाम घोषित</h4>
-                <p>12वीं बोर्ड के नतीजे आज जारी हो गए हैं। अपना रिजल्ट देखने के लिए यहाँ क्लिक करें।</p>
-                <a href="#">और पढ़ें...</a>
-            </article>
-            <article>
-                <h4>नई स्कॉलरशिप योजना</h4>
-                <p>सरकार ने मेधावी छात्रों के लिए नई स्कॉलरशिप की घोषणा की है। आवेदन की अंतिम तिथि 15 अक्टूबर है।</p>
+                <h4>नई शिक्षा नीति 2025</h4>
+                <p>नई शिक्षा नीति के तहत अगले सत्र से पाठ्यक्रम में बड़े बदलावों की घोषणा।</p>
                 <a href="#">और पढ़ें...</a>
             </article>
         </section>
 
         <!-- Jobs Section -->
-        <section class="card">
+        <section id="jobs" class="card">
             <h2>Latest Jobs</h2>
+            <article>
+                <h4>डाक विभाग में भर्ती</h4>
+                <p>भारतीय डाक विभाग में 10,000+ पदों पर ग्रामीण डाक सेवक (GDS) की भर्ती। अंतिम तिथि: 25 सितंबर 2025।</p>
+                <a href="#">विवरण देखें...</a>
+            </article>
             <article>
                 <h4>बैंक में क्लर्क की भर्ती</h4>
                 <p>स्टेट बैंक में 5000 क्लर्क पदों के लिए आवेदन शुरू। योग्यता: स्नातक।</p>
                 <a href="#">विवरण देखें...</a>
             </article>
-            <article>
-                <h4>रेलवे में निकलीं भर्तियाँ</h4>
-                <p>रेलवे सुरक्षा बल (RPF) में 10वीं पास के लिए भर्तियाँ।</p>
-                <a href="#">विवरण देखें...</a>
-            </article>
         </section>
 
         <!-- Results Section -->
-        <section class="card">
+        <section id="results" class="card">
             <h2>Results</h2>
             <article>
-                <h4>SSC CGL 2025 Tier-1 Result</h4>
-                <p>SSC CGL टियर-1 का रिजल्ट जारी कर दिया गया है।</p>
+                <h4>UPTET 2025 Result</h4>
+                <p>उत्तर प्रदेश शिक्षक पात्रता परीक्षा (UPTET) का परिणाम घोषित कर दिया गया है।</p>
                 <a href="#">रिजल्ट देखें...</a>
+            </article>
+        </section>
+
+        <!-- Current Affairs Section -->
+        <section id="current-affairs" class="card">
+            <h2>Current Affairs</h2>
+            <article>
+                <h4>आज का करंट अफेयर्स (04 सितंबर 2025)</h4>
+                <p>1. भारत ने नए संचार उपग्रह का सफल प्रक्षेपण किया।<br>2. G20 शिखर सम्मेलन नई दिल्ली में शुरू हुआ।</p>
+                <a href="#">सभी प्रश्न देखें...</a>
+            </article>
+        </section>
+
+        <!-- Quizzes Section -->
+        <section id="quizzes" class="card">
+            <h2>Daily Quizzes</h2>
+            <article>
+                <h4>इतिहास का डेली क्विज</h4>
+                <p>प्राचीन भारत के इतिहास पर आधारित 10 महत्वपूर्ण प्रश्नों का अभ्यास करें।</p>
+                <a href="#">क्विज शुरू करें...</a>
             </article>
         </section>
     </main>
