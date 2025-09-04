@@ -1,0 +1,49 @@
+name: Update Current Affairs from RSS Feed
+
+on:
+  schedule:
+    # हर घंटे 15 मिनट पर चलता है
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch RSS Feed and update current-affairs.html
+        run: |
+          # Jagran Josh Current Affairs RSS Feed से खबरें निकालता है
+          LATEST_NEWS=$(curl -s "https://www.jagranjosh.com/rss/josh/current-affairs.xml" | grep -E '<title>|<link>|<pubDate>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 15)
+
+          # HTML फाइल का नाम
+          CA_FILE="current-affairs.html"
+
+          # हर खबर के लिए एक HTML आर्टिकल बनाता है
+          NEW_ARTICLES=""
+          while read -r title_line && read -r link_line && read -r date_line; do
+            TITLE=$(echo "$title_line" | sed -e 's/<title>//' -e 's/<\/title>//')
+            LINK=$(echo "$link_line" | sed -e 's/<link>//' -e 's/<\/link>//')
+            
+            if [[ -n "$TITLE" && -n "$LINK" && "$TITLE" != "Current Affairs" ]]; then
+              ARTICLE="<article><h4>${TITLE}</h4><p>यह खबर Jagran Josh से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
+              NEW_ARTICLES="${NEW_ARTICLES}${ARTICLE}"
+            fi
+          done <<< "$(echo "$LATEST_NEWS" | sed 's/^[ \t]*//' | paste -d '\n' - - -)"
+
+          # current-affairs.html फाइल में नए आर्टिकल जोड़ता है
+          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और खबरें जोड़ें -->/{print;print new_articles;next}1' "$CA_FILE" > temp_ca.html && mv temp_ca.html "$CA_FILE"
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if ! git diff --quiet; then
+            git add current-affairs.html
+            git commit -m "🤖 Automated: Updated latest current affairs from RSS feed"
+            git push
+          else
+            echo "No new current affairs found. No changes to commit."
+          fi
