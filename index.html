@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latest Education Hub</title>
     <style>
+        /* --- पुराना स्टाइल कोड --- */
         body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; margin: 0; padding-bottom: 60px; }
         header { background: #4CAF50; color: white; padding: 15px; }
         header h1 { font-size: 28px; margin: 0; }
@@ -19,7 +20,23 @@
         .card article:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .card h4 { margin: 0 0 5px 0; font-size: 16px; }
         .card p { margin: 0; font-size: 14px; line-height: 1.5; }
-        .card a { color: #4CAF50; font-weight: bold; text-decoration: none; font-size: 14px; }
+
+        /* --- यह नया स्टाइल कोड है --- */
+        .read-more-btn {
+            color: #4CAF50;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer; /* ताकि यह बटन जैसा लगे */
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .full-content {
+            display: none; /* विवरण को छिपाने के लिए */
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -32,84 +49,45 @@
         <a href="#education">Education</a>
         <a href="#jobs">Jobs</a>
         <a href="#results">Results</a>
-        <a href="#current-affairs">Current Affairs</a>
-        <a href="#quizzes">Quizzes</a>
     </nav>
 
     <main>
         <!-- Education Section -->
-<section id="education" class="card">
-    <h2>Education News</h2>
+        <section id="education" class="card">
+            <h2>Education News</h2>
+            <article>
+                <h4>CUET-UG 2026 के लिए नया पैटर्न</h4>
+                <p>कॉमन यूनिवर्सिटी एंट्रेंस टेस्ट (CUET-UG) 2026 के लिए परीक्षा पैटर्न में बदलाव की घोषणा।</p>
+                
+                <!-- "और पढ़ें..." बटन -->
+                <a class="read-more-btn">और पढ़ें...</a>
+                
+                <!-- छिपा हुआ पूरा विवरण -->
+                <div class="full-content">
+                    <p>राष्ट्रीय परीक्षण एजेंसी (NTA) ने बताया है कि छात्रों पर दबाव कम करने और उन्हें बेहतर अवसर प्रदान करने के लिए अब यह परीक्षा साल में दो बार आयोजित की जा सकती है। इसके अलावा, विषयों की संख्या और परीक्षा की अवधि में भी समायोजन किया जाएगा।</p>
+                </div>
+            </article>
 
-    <article>
-        <h4>CUET-UG 2026 के लिए नया पैटर्न</h4>
-        <p>कॉमन यूनिवर्सिटी एंट्रेंस टेस्ट (CUET-UG) 2026 के लिए परीक्षा पैटर्न में बदलाव की घोषणा। अब साल में दो बार परीक्षा आयोजित करने पर विचार किया जा रहा है।</p>
-        <a href="#">और पढ़ें...</a>
-    </article>
+            <article>
+                <h4>बोर्ड परीक्षा सुधार (Board Exam Reforms)</h4>
+                <p>नई शिक्षा नीति के तहत, 10वीं और 12वीं की बोर्ड परीक्षाओं के दबाव को कम करने के लिए...</p>
+                <a class="read-more-btn">और पढ़ें...</a>
+                <div class="full-content">
+                    <p>अब साल में दो बार परीक्षा का विकल्प दिया जा सकता है, जिसमें से सर्वश्रेष्ठ स्कोर को गिना जाएगा। इसका उद्देश्य छात्रों को रटने की प्रवृत्ति से दूर करना और सीखने पर ध्यान केंद्रित करवाना है।</p>
+                </div>
+            </article>
+        </section>
 
-    <article>
-        <h4>बोर्ड परीक्षा सुधार (Board Exam Reforms)</h4>
-        <p>नई शिक्षा नीति के तहत, 10वीं और 12वीं की बोर्ड परीक्षाओं के दबाव को कम करने के लिए साल में दो बार परीक्षा का विकल्प दिया जा सकता है।</p>
-        <a href="#">और पढ़ें...</a>
-    </article>
-
-    <article>
-        <h4>डिजिटल यूनिवर्सिटी की स्थापना</h4>
-        <p>सरकार ने एक डिजिटल यूनिवर्सिटी स्थापित करने की घोषणा की है, जो छात्रों को ऑनलाइन माध्यम से विश्व स्तरीय शिक्षा प्रदान करेगी।</p>
-        <a href="#">और पढ़ें...</a>
-    </article>
-    
-    <article>
-        <h4>स्किल इंडिया मिशन 2.0</h4>
-        <p>युवाओं को रोजगार के लिए तैयार करने हेतु 'स्किल इंडिया मिशन' का अगला चरण शुरू। इसमें AI, मशीन लर्निंग और रोबोटिक्स जैसे नए कोर्स जोड़े जाएंगे।</p>
-        <a href="#">और पढ़ें...</a>
-    </article>
-
-</section>
-
-
-        <!-- Jobs Section -->
+        <!-- Jobs Section (उदाहरण) -->
         <section id="jobs" class="card">
             <h2>Latest Jobs</h2>
             <article>
                 <h4>डाक विभाग में भर्ती</h4>
-                <p>भारतीय डाक विभाग में 10,000+ पदों पर ग्रामीण डाक सेवक (GDS) की भर्ती। अंतिम तिथि: 25 सितंबर 2025।</p>
-                <a href="#">विवरण देखें...</a>
-            </article>
-            <article>
-                <h4>बैंक में क्लर्क की भर्ती</h4>
-                <p>स्टेट बैंक में 5000 क्लर्क पदों के लिए आवेदन शुरू। योग्यता: स्नातक।</p>
-                <a href="#">विवरण देखें...</a>
-            </article>
-        </section>
-
-        <!-- Results Section -->
-        <section id="results" class="card">
-            <h2>Results</h2>
-            <article>
-                <h4>UPTET 2025 Result</h4>
-                <p>उत्तर प्रदेश शिक्षक पात्रता परीक्षा (UPTET) का परिणाम घोषित कर दिया गया है।</p>
-                <a href="#">रिजल्ट देखें...</a>
-            </article>
-        </section>
-
-        <!-- Current Affairs Section -->
-        <section id="current-affairs" class="card">
-            <h2>Current Affairs</h2>
-            <article>
-                <h4>आज का करंट अफेयर्स (04 सितंबर 2025)</h4>
-                <p>1. भारत ने नए संचार उपग्रह का सफल प्रक्षेपण किया।<br>2. G20 शिखर सम्मेलन नई दिल्ली में शुरू हुआ।</p>
-                <a href="#">सभी प्रश्न देखें...</a>
-            </article>
-        </section>
-
-        <!-- Quizzes Section -->
-        <section id="quizzes" class="card">
-            <h2>Daily Quizzes</h2>
-            <article>
-                <h4>इतिहास का डेली क्विज</h4>
-                <p>प्राचीन भारत के इतिहास पर आधारित 10 महत्वपूर्ण प्रश्नों का अभ्यास करें।</p>
-                <a href="#">क्विज शुरू करें...</a>
+                <p>भारतीय डाक विभाग में 10,000+ पदों पर ग्रामीण डाक सेवक (GDS) की भर्ती।</p>
+                <a class="read-more-btn">विवरण देखें...</a>
+                <div class="full-content">
+                    <p><strong>योग्यता:</strong> 10वीं पास।<br><strong>अंतिम तिथि:</strong> 25 सितंबर 2025।<br>आवेदन करने के लिए आधिकारिक वेबसाइट पर जाएं।</p>
+                </div>
             </article>
         </section>
     </main>
@@ -117,5 +95,29 @@
     <footer>
         © 2025 Latest Education Hub | All Rights Reserved
     </footer>
+
+    <!-- यह जावास्क्रिप्ट कोड है जो जादू करता है -->
+    <script>
+        // सभी "और पढ़ें..." बटनों को ढूंढो
+        const allButtons = document.querySelectorAll('.read-more-btn');
+
+        // हर बटन पर क्लिक का फंक्शन लगाओ
+        allButtons.forEach(button => {
+            button.addEventListener('click', event => {
+                // बटन के ठीक बाद वाले छिपे हुए कंटेंट को ढूंढो
+                const content = event.target.nextElementSibling;
+
+                // कंटेंट को दिखाओ या छिपाओ
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                    event.target.textContent = 'और पढ़ें...'; // बटन का टेक्स्ट बदलो
+                } else {
+                    content.style.display = 'block';
+                    event.target.textContent = 'कम पढ़ें...'; // बटन का टेक्स्ट बदलो
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
