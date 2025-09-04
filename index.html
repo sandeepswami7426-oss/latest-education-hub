@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latest Education Hub</title>
+    <title>Latest Education Hub - Home</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; margin: 0; padding-bottom: 60px; }
         header { background: #4CAF50; color: white; padding: 15px; }
@@ -19,8 +19,8 @@
         .card article:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .card h4 { margin: 0 0 5px 0; font-size: 16px; }
         .card p { margin: 0; font-size: 14px; line-height: 1.5; }
-        .read-more-btn { color: #4CAF50; font-weight: bold; text-decoration: none; font-size: 14px; cursor: pointer; display: inline-block; margin-top: 10px; }
-        .full-content { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+        .read-more-btn { color: #4CAF50; font-weight: bold; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 10px; }
+        .view-all-btn { display: block; text-align: center; margin-top: 15px; padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -30,104 +30,49 @@
     </header>
 
     <nav>
-        <a href="#education">Education</a>
-        <a href="#jobs">Jobs</a>
-        <a href="#results">Results</a>
-        <a href="#current-affairs">Current Affairs</a>
-        <a href="#quizzes">Quizzes</a>
+        <a href="index.html">Home</a>
+        <a href="education.html">Education</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="results.html">Results</a>
+        <a href="current-affairs.html">Current Affairs</a>
+        <a href="quizzes.html">Quizzes</a>
     </nav>
 
-        <main>
+    <main>
         <!-- Education Section -->
-        <section id="education" class="card">
+        <section class="card">
             <h2>Education News</h2>
             <article>
                 <h4>नई शिक्षा नीति 2025 लागू</h4>
                 <p>नई शिक्षा नीति के तहत, 2025-26 सत्र से विश्वविद्यालयों में 4-वर्षीय डिग्री प्रोग्राम अनिवार्य कर दिया गया है।</p>
-                <a class="read-more-btn">और पढ़ें...</a>
-                <div class="full-content"><p>इसके साथ ही, छात्रों को मल्टीपल एंट्री और एग्जिट का विकल्प भी मिलेगा, जिससे वे अपनी पढ़ाई बीच में रोककर बाद में वहीं से शुरू कर सकेंगे।</p></div>
             </article>
-            <article>
-                <h4>CBSE बोर्ड परीक्षा पैटर्न में बदलाव</h4>
-                <p>केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) ने 10वीं और 12वीं की बोर्ड परीक्षाओं के लिए नए पैटर्न की घोषणा की है।</p>
-                <a class="read-more-btn">और पढ़ें...</a>
-                <div class="full-content"><p>अब 40% प्रश्न योग्यता-आधारित (competency-based) होंगे, जिनमें केस-स्टडी और सोर्स-बेस्ड प्रश्न शामिल होंगे। यह बदलाव छात्रों की विश्लेषणात्मक क्षमताओं को बढ़ाने के लिए किया गया है।</p></div>
-            </article>
+            <a href="education.html" class="view-all-btn">सभी Education News देखें</a>
         </section>
 
         <!-- Jobs Section -->
-        <section id="jobs" class="card">
+        <section class="card">
             <h2>Latest Jobs</h2>
             <article>
-                <h4>SSC CGL 2025 भर्ती</h4>
-                <p>कर्मचारी चयन आयोग (SSC) ने संयुक्त स्नातक स्तरीय (CGL) परीक्षा 2025 के लिए अधिसूचना जारी की है।</p>
-               <a href="https://ssc.gov.in/api/attachment/uploads/master/cgl2024_notice_24062024.pdf" target="_blank" class="read-more-btn">ऑफिशियल नोटिफिकेशन देखें (2024)</a> class="full-content"><p><strong>पद:</strong> विभिन्न मंत्रालयों में असिस्टेंट सेक्शन ऑफिसर, इंस्पेक्टर, आदि।<br><strong>योग्यता:</strong> किसी भी विषय में स्नातक।<br><strong>अंतिम तिथि:</strong> 30 अक्टूबर 2025।</p></div>
+                <h4>SSC CGL 2024 भर्ती</h4>
+                <p>कर्मचारी चयन आयोग (SSC) ने संयुक्त स्नातक स्तरीय (CGL) परीक्षा 2024 के लिए अधिसूचना जारी की है।</p>
             </article>
-            <article>
-                <h4>रेलवे सुरक्षा बल (RPF) में भर्ती</h4>
-                <p>रेलवे सुरक्षा बल (RPF) में कांस्टेबल और सब-इंस्पेक्टर के 9,000 पदों पर भर्ती के लिए आवेदन शुरू।</p>
-                <a class="read-more-btn">विवरण देखें...</a>
-                <div class="full-content"><p><strong>योग्यता:</strong> कांस्टेबल के लिए 10वीं पास और सब-इंस्पेक्टर के लिए स्नातक।<br><strong>आयु सीमा:</strong> 18-25 वर्ष।<br><strong>चयन प्रक्रिया:</strong> कंप्यूटर आधारित टेस्ट (CBT), शारीरिक दक्षता परीक्षा (PET)।</p></div>
-            </article>
+            <a href="jobs.html" class="view-all-btn">सभी Jobs देखें</a>
         </section>
 
         <!-- Results Section -->
-        <section id="results" class="card">
+        <section class="card">
             <h2>Results</h2>
             <article>
                 <h4>JEE Advanced 2025 Result</h4>
                 <p>आईआईटी बॉम्बे ने जेईई एडवांस्ड 2025 का परिणाम घोषित कर दिया है। उम्मीदवार आधिकारिक वेबसाइट पर देख सकते हैं।</p>
-                <a class="read-more-btn">और पढ़ें...</a>
-                <div class="full-content"><p>इस साल, टॉप 100 रैंक में 25 छात्र IIT बॉम्बे जोन से हैं। काउंसलिंग प्रक्रिया 10 सितंबर से शुरू होगी।</p></div>
             </article>
-        </section>
-
-        <!-- Current Affairs Section -->
-        <section id="current-affairs" class="card">
-            <h2>Current Affairs</h2>
-            <article>
-                <h4>आज का करंट अफेयर्स (04 सितंबर 2025)</h4>
-                <p>भारत ने 'चंद्रयान-4' मिशन की घोषणा की, जिसका उद्देश्य चंद्रमा से नमूने वापस लाना है।</p>
-                <a class="read-more-btn">और पढ़ें...</a>
-                <div class="full-content"><p>यह मिशन 2028 में लॉन्च होने की उम्मीद है और यह भारत को ऐसा करने वाला चौथा देश बना देगा। इसरो और जापानी एयरोस्पेस एक्सप्लोरेशन एजेंसी (JAXA) इस मिशन पर मिलकर काम कर सकते हैं।</p></div>
-            </article>
-        </section>
-
-        <!-- Quizzes Section -->
-        <section id="quizzes" class="card">
-            <h2>Daily Quizzes</h2>
-            <article>
-                <h4>संविधान पर डेली क्विज</h4>
-                <p>भारतीय संविधान के मौलिक अधिकारों पर आधारित 10 महत्वपूर्ण प्रश्नों का अभ्यास करें।</p>
-                <a class="read-more-btn">क्विज शुरू करें...</a>
-                <div class="full-content"><p>यह क्विज आपकी प्रतियोगी परीक्षाओं की तैयारी में मदद करेगा। क्या आप जानते हैं कि 'समानता का अधिकार' किन अनुच्छेदों में वर्णित है?</p></div>
-            </article>
+            <a href="results.html" class="view-all-btn">सभी Results देखें</a>
         </section>
     </main>
 
     <footer>
-    <p>Latest Education Hub भारत के छात्रों को शिक्षा, नौकरी और रिजल्ट्स की ताज़ा जानकारी देने का एक प्रयास है।</p>
-    © 2025 Latest Education Hub | All Rights Reserved
-</footer>
-
-    <script>
-        const allButtons = document.querySelectorAll('.read-more-btn');
-        allButtons.forEach(button => {
-            button.addEventListener('click', event => {
-                const content = event.target.nextElementSibling;
-                const isVisible = content.style.display === 'block';
-                content.style.display = isVisible ? 'none' : 'block';
-                if (event.target.textContent.includes(' पढ़ें') || event.target.textContent.includes(' देखें')) {
-                    event.target.textContent = isVisible ? event.target.textContent.replace('कम', 'और') : event.target.textContent.replace('और', 'कम');
-                     if(event.target.textContent.includes('कम पढ़ें')) { event.target.textContent = 'कम पढ़ें...';} else if(event.target.textContent.includes('और पढ़ें')) { event.target.textContent = 'और पढ़ें...';}
-                     if(event.target.textContent.includes('कम देखें')) { event.target.textContent = 'कम देखें...';} else if(event.target.textContent.includes('और देखें')) { event.target.textContent = 'और देखें...';}
-                     if(event.target.textContent.includes('कम करें')) { event.target.textContent = 'कम करें...';} else if(event.target.textContent.includes('शुरू करें')) { event.target.textContent = 'शुरू करें...';}
-                } else {
-                     event.target.textContent = isVisible ? 'शुरू करें...' : 'कम करें...';
-                }
-            });
-        });
-    </script>
-
+        <p>Latest Education Hub भारत के छात्रों को शिक्षा, नौकरी और रिजल्ट्स की ताज़ा जानकारी देने का एक प्रयास है।</p>
+        © 2025 Latest Education Hub | All Rights Reserved
+    </footer>
 </body>
 </html>
