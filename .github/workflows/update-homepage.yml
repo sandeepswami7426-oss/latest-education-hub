@@ -2,8 +2,7 @@ name: Update Homepage with All Sections
 
 on:
   schedule:
-    # हर घंटे 5 मिनट पर चलता है
-    - cron: '5 * * * *'
+    - cron: '5 * * * *'  # हर घंटे 5 मिनट पर चलेगा
   workflow_dispatch:
 
 jobs:
@@ -13,38 +12,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Update index.html with latest posts and static sections
         run: |
-          # सुनिश्चित करें कि सभी फाइलें मौजूद हैं
+          # Confirm required files exist
           if [ ! -f "education.html" ] || [ ! -f "jobs.html" ] || [ ! -f "current-affairs.html" ]; then
             echo "One or more source files not found. Exiting."
             exit 1
           fi
 
-          # हर फाइल से सबसे पहला <article> ब्लॉक निकालें
+          # Extract latest <article> from each auto-updated file
           LATEST_EDUCATION=$(grep -o '<article>.*</article>' education.html | head -n 1)
           LATEST_JOB=$(grep -o '<article>.*</article>' jobs.html | head -n 1)
-          LATEST_CURRENT_AFFAIRS=$(grep -o '<article>.*</article>' current-affairs.html | head -n 1)
+          LATEST_CURRENT=$(grep -o '<article>.*</article>' current-affairs.html | head -n 1)
 
-          # होम पेज के लिए नया कंटेंट तैयार करें
-          # यह ऑटोमेटिक और स्टैटिक, दोनों तरह के सेक्शन दिखाएगा
+          # Prepare static sections
+          RESULTS_SECTION="<section id='results' class='card'><h2>Results</h2><article><h4>परीक्षा परिणाम</h4><p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
+          QUIZZES_SECTION="<section id='quizzes' class='card'><h2>Quizzes</h2><article><h4>डेली क्विज़</h4><p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
+
+          # Combine all sections into homepage content
           NEW_CONTENT="<main>"
           NEW_CONTENT+="<h2>ताज़ा खबरें और अपडेट्स</h2>"
-          
-          # ऑटोमेटिक सेक्शन
           NEW_CONTENT+="<section id='education' class='card'><h2>Education News</h2>${LATEST_EDUCATION}<a href='education.html' class='full-page-btn'>सभी एजुकेशन न्यूज़ देखें</a></section>"
           NEW_CONTENT+="<section id='jobs' class='card'><h2>Latest Jobs</h2>${LATEST_JOB}<a href='jobs.html' class='full-page-btn'>सभी लेटेस्ट जॉब्स देखें</a></section>"
-          NEW_CONTENT+="<section id='current-affairs' class='card'><h2>Current Affairs</h2>${LATEST_CURRENT_AFFAIRS}<a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
-          
-          # स्टैटिक (मैनुअल) सेक्शन
-          NEW_CONTENT+="<section id='results' class='card'><h2>Results</h2><article><h4>परीक्षा परिणाम</h4><p>विभिन्न परीक्षाओं के परिणाम यहाँ देखें।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
-          NEW_CONTENT+="<section id='quizzes' class='card'><h2>Quizzes</h2><article><h4>डेली क्विज़</h4><p>अपनी तैयारी को परखने के लिए डेली क्विज़ में भाग लें।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
-          
+          NEW_CONTENT+="<section id='current-affairs' class='card'><h2>Current Affairs</h2>${LATEST_CURRENT}<a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
+          NEW_CONTENT+="${RESULTS_SECTION}"
+          NEW_CONTENT+="${QUIZZES_SECTION}"
           NEW_CONTENT+="</main>"
 
-          # index.html फाइल का पुराना <main> हिस्सा हटाकर नया वाला डालें
+          # Replace <main> block in index.html
           sed -i '/<main>/,/<\/main>/c\'"$NEW_CONTENT"'' index.html
 
       - name: Commit and push changes
@@ -53,8 +50,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           if ! git diff --quiet; then
             git add index.html
-            git commit -m "🤖 Automated: Updated homepage with all sections"
+            git commit -m "🤖 Automated: Updated homepage with all 6 sections"
             git push
           else
             echo "Homepage is already up to date."
-          fi
