@@ -1,78 +1,39 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latest Education Hub - Home</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; margin: 0; padding-bottom: 60px; }
-        header { background: #4CAF50; color: white; padding: 15px; }
-        header h1 { font-size: 28px; margin: 0; }
-        header p { margin: 5px 0 0; font-size: 14px; }
-        nav { padding: 15px; background: #f0f0f0; border-bottom: 1px solid #ddd; white-space: nowrap; overflow-x: auto; }
-        nav a { margin: 0 10px; color: #333; text-decoration: none; font-weight: bold; font-size: 14px; }
-        footer { background: #222; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; font-size: 12px; }
-        main { padding: 10px; text-align: left; }
-        .card { background: white; border: 1px solid #ddd; padding: 15px; margin: 20px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .card h2 { border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-top: 0; font-size: 20px; }
-        .card article { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .card article:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .card h4 { margin: 0 0 5px 0; font-size: 16px; }
-        .card p { margin: 0; font-size: 14px; line-height: 1.5; }
-        .read-more-btn { color: #4CAF50; font-weight: bold; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 10px; }
-        .view-all-btn { display: block; text-align: center; margin-top: 15px; padding: 10px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <header>
-    <a href="index.html">
-        <img src="images/logo.png" alt="Latest Education Hub Logo" style="height: 60px;">
-    </a>
-</header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="education.html">Education</a>
-        <a href="jobs.html">Jobs</a>
-        <a href="results.html">Results</a>
-        <a href="current-affairs.html">Current Affairs</a>
-        <a href="quizzes.html">Quizzes</a>
-    </nav>
+<main>
+  <h2>ताज़ा खबरें और अपडेट्स</h2>
 
-    <main>
-        <!-- Education Section -->
-        <section class="card">
-            <h2>Education News</h2>
-            <article>
-                <h4>नई शिक्षा नीति 2025 लागू</h4>
-                <p>नई शिक्षा नीति के तहत, 2025-26 सत्र से विश्वविद्यालयों में 4-वर्षीय डिग्री प्रोग्राम अनिवार्य कर दिया गया है।</p>
-            </article>
-            <a href="education.html" class="view-all-btn">सभी Education News देखें</a>
-        </section>
+  <section id="education" class="card">
+    <h2>Education News</h2>
+    <!-- यहाँ एजुकेशन अपडेट आएंगे -->
+    <a href="education.html" class="full-page-btn">सभी एजुकेशन न्यूज़ देखें</a>
+  </section>
 
-        <!-- Jobs Section -->
-        <section class="card">
-            <h2>Latest Jobs</h2>
-            <article>
-                <h4>SSC CGL 2024 भर्ती</h4>
-                <p>कर्मचारी चयन आयोग (SSC) ने संयुक्त स्नातक स्तरीय (CGL) परीक्षा 2024 के लिए अधिसूचना जारी की है।</p>
-            </article>
-            <a href="jobs.html" class="view-all-btn">सभी Jobs देखें</a>
-        </section>
+  <section id="jobs" class="card">
+    <h2>Latest Jobs</h2>
+    <!-- यहाँ जॉब अपडेट आएंगे -->
+    <a href="jobs.html" class="full-page-btn">सभी लेटेस्ट जॉब्स देखें</a>
+  </section>
 
-        <!-- Results Section -->
-        <section class="card">
-            <h2>Results</h2>
-            <article>
-                <h4>JEE Advanced 2025 Result</h4>
-                <p>आईआईटी बॉम्बे ने जेईई एडवांस्ड 2025 का परिणाम घोषित कर दिया है। उम्मीदवार आधिकारिक वेबसाइट पर देख सकते हैं।</p>
-            </article>
-            <a href="results.html" class="view-all-btn">सभी Results देखें</a>
-        </section>
-    </main>
+  <section id="current-affairs" class="card">
+    <h2>Current Affairs</h2>
+    <!-- यहाँ करेंट अफेयर्स अपडेट आएंगे -->
+    <a href="current-affairs.html" class="full-page-btn">सभी करेंट अफेयर्स देखें</a>
+  </section>
 
-    <footer>
-        <p>Latest Education Hub भारत के छात्रों को शिक्षा, नौकरी और रिजल्ट्स की ताज़ा जानकारी देने का एक प्रयास है।</p>
-        © 2025 Latest Education Hub | All Rights Reserved
-    </footer>
-</body>
-</html>
+  <section id="results" class="card">
+    <h2>Results</h2>
+    <article>
+      <h4>परीक्षा परिणाम</h4>
+      <p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p>
+      <a href="results.html" class="read-more-btn">सभी रिजल्ट्स देखें...</a>
+    </article>
+  </section>
+
+  <section id="quizzes" class="card">
+    <h2>Quizzes</h2>
+    <article>
+      <h4>डेली क्विज़</h4>
+      <p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p>
+      <a href="quizzes.html" class="read-more-btn">क्विज़ शुरू करें...</a>
+    </article>
+  </section>
+</main>
