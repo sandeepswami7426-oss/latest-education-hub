@@ -1,8 +1,8 @@
-name: Update Education News from RSS Feed
+name: Update Education from ET RSS Feed
 
 on:
   schedule:
-    - cron: '30 * * * *' # हर घंटे 30 मिनट पर चलता है
+    - cron: '10 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,28 +12,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Fetch RSS Feed and update education.html
+      - name: Fetch ET Education RSS Feed and update education.html
         run: |
-          # Education RSS Feed से खबरें निकालता है
-          LATEST_NEWS=$(curl -s "https://economictimes.indiatimes.com/industry/services/education/rssfeeds/13358260.cms" | grep -E '<title>|<link>|<pubDate>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 15)
+          FEED_URL="https://www.etnownews.com/feeds/gns-etn-education"
+          EDU_FILE="education.html"
 
-          # HTML फाइल का नाम
-          EDUCATION_FILE="education.html"
+          LATEST_NEWS=$(curl -s "$FEED_URL" | grep -E '<title>|<link>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 20)
 
-          # हर खबर के लिए एक HTML आर्टिकल बनाता है
           NEW_ARTICLES=""
-          while read -r title_line && read -r link_line && read -r date_line; do
+          while read -r title_line && read -r link_line; do
             TITLE=$(echo "$title_line" | sed -e 's/<title>//' -e 's/<\/title>//')
             LINK=$(echo "$link_line" | sed -e 's/<link>//' -e 's/<\/link>//')
             
             if [[ -n "$TITLE" && -n "$LINK" && "$TITLE" != "Education" ]]; then
-              ARTICLE="<article><h4>${TITLE}</h4><p>यह खबर The Economic Times से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
+              ARTICLE="<article><h4>${TITLE}</h4><p>यह खबर ET Now से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
               NEW_ARTICLES="${NEW_ARTICLES}${ARTICLE}"
             fi
-          done <<< "$(echo "$LATEST_NEWS" | sed 's/^[ \t]*//' | paste -d '\n' - - -)"
+          done <<< "$(echo "$LATEST_NEWS" | sed 's/^[ \t]*//' | paste -d '\n' - -)"
 
-          # education.html फाइल में नए आर्टिकल जोड़ता है
-          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और खबरें जोड़ें -->/{print;print new_articles;next}1' "$EDUCATION_FILE" > temp_education.html && mv temp_education.html "$EDUCATION_FILE"
+          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और शिक्षा खबरें जोड़ें -->/{print;print new_articles;next}1' "$EDU_FILE" > temp_edu.html && mv temp_edu.html "$EDU_FILE"
 
       - name: Commit and push changes
         run: |
@@ -41,8 +38,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           if ! git diff --quiet; then
             git add education.html
-            git commit -m "🤖 Automated: Updated latest education news from RSS feed"
+            git commit -m "🤖 Automated: Updated latest education news from ET RSS feed"
             git push
           else
             echo "No new education news found. No changes to commit."
-          fi
