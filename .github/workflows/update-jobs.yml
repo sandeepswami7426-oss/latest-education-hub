@@ -1,11 +1,9 @@
-name: Update Jobs from RSS Feed
+name: Update Jobs from ET RSS Feed
 
 on:
   schedule:
-    # हर घंटे अपने आप चलता है
-    - cron: '0 * * * *'
+    - cron: '30 * * * *'  # हर घंटे 30 मिनट पर चलेगा
   workflow_dispatch:
-    # इसे मैनुअली भी चला सकते हैं
 
 jobs:
   update-file:
@@ -14,42 +12,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Fetch RSS Feed and update jobs.html
+      - name: Fetch ET Jobs RSS Feed and update jobs.html
         run: |
-          # RSS Feed से सबसे नई 5 खबरें निकालता है
-          LATEST_JOBS=$(curl -s "https://economictimes.indiatimes.com/jobs/rss" | grep -E '<title>|<link>|<pubDate>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 15)
-
-          # HTML फाइल का नाम
+          FEED_URL="https://www.etnownews.com/feeds/gns-etn-jobs"
           JOBS_FILE="jobs.html"
 
-          # हर खबर के लिए एक HTML आर्टिकल बनाता है
+          LATEST_NEWS=$(curl -s "$FEED_URL" | grep -E '<title>|<link>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 20)
+
           NEW_ARTICLES=""
-          while read -r title_line && read -r link_line && read -r date_line; do
-            # खबर का टाइटल निकालता है
+          while read -r title_line && read -r link_line; do
             TITLE=$(echo "$title_line" | sed -e 's/<title>//' -e 's/<\/title>//')
-            # खबर का लिंक निकालता है
             LINK=$(echo "$link_line" | sed -e 's/<link>//' -e 's/<\/link>//')
             
-            # अगर टाइटल या लिंक खाली नहीं है, तो आर्टिकल बनाता है
-            if [[ -n "$TITLE" && -n "$LINK" && "$TITLE" != "ET Job" ]]; then
-              ARTICLE="<article><h4>${TITLE}</h4><p>यह खबर The Economic Times से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
+            if [[ -n "$TITLE" && -n "$LINK" && "$TITLE" != "Jobs" ]]; then
+              ARTICLE="<article><h4>${TITLE}</h4><p>यह खबर ET Now से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
               NEW_ARTICLES="${NEW_ARTICLES}${ARTICLE}"
             fi
-          done <<< "$(echo "$LATEST_JOBS" | sed 's/^[ \t]*//' | paste -d '\n' - - -)"
+          done <<< "$(echo "$LATEST_NEWS" | sed 's/^[ \t]*//' | paste -d '\n' - -)"
 
-          # jobs.html फाइल में नए आर्टिकल जोड़ता है
-          # <!-- यहाँ और जॉब्स जोड़ें --> लाइन को ढूंढकर उसके ठीक नीचे नए आर्टिकल डालता है
-          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और जॉब्स जोड़ें -->/{print;print new_articles;next}1' "$JOBS_FILE" > temp_jobs.html && mv temp_jobs.html "$JOBS_FILE"
+          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और नौकरियाँ जोड़ें -->/{print;print new_articles;next}1' "$JOBS_FILE" > temp_jobs.html && mv temp_jobs.html "$JOBS_FILE"
 
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          # देखता है कि क्या फाइल में कोई बदलाव हुआ है
           if ! git diff --quiet; then
             git add jobs.html
-            git commit -m "🤖 Automated: Updated latest jobs from RSS feed"
+            git commit -m "🤖 Automated: Updated latest jobs from ET RSS feed"
             git push
           else
             echo "No new jobs found. No changes to commit."
-          fi
