@@ -1,53 +1,16 @@
-name: Update Jobs from ET RSS Feed
+- name: Commit and push changes
+  run: |
+    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-on:
-  schedule:
-    - cron: '5 * * * *'
-  workflow_dispatch:
+    echo "Git status before commit:"
+    git status
 
-jobs:
-  update-file:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Fetch ET Jobs RSS Feed and update jobs.html
-        run: |
-          FEED_URL="https://www.etnownews.com/feeds/gns-etn-jobs"
-          JOB_FILE="jobs.html"
-
-          LATEST_NEWS=$(curl -s "$FEED_URL" | grep -E '<title>|<link>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 20)
-
-          echo "----- RSS Feed Output -----"
-          echo "$LATEST_NEWS"
-          echo "---------------------------"
-
-          NEW_ARTICLES=""
-          while read -r title_line && read -r link_line; do
-            TITLE=$(echo "$title_line" | sed -e 's/<title>//' -e 's/<\/title>//')
-            LINK=$(echo "$link_line" | sed -e 's/<link>//' -e 's/<\/link>//')
-            
-            if [[ -n "$TITLE" && -n "$LINK" && "$TITLE" != "Jobs" ]]; then
-              ARTICLE="<article><h4>${TITLE}</h4><p>यह नौकरी ET Now से ली गई है।</p><a href=\"${LINK}\" target=\"_blank\" class=\"read-more-btn\">पूरी जानकारी देखें...</a></article>"
-              NEW_ARTICLES="${NEW_ARTICLES}${ARTICLE}"
-            fi
-          done <<< "$(echo "$LATEST_NEWS" | sed 's/^[ \t]*//' | paste -d '\n' - -)"
-
-          awk -v new_articles="$NEW_ARTICLES" '/<!-- यहाँ और जॉब्स जोड़ें -->/{print;print new_articles;next}1' "$JOB_FILE" > temp_jobs.html && mv temp_jobs.html "$JOB_FILE"
-
-      - name: Commit and push changes
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-
-          echo "Git status before commit:"
-          git status
-
-          if [ -n "$(git status --porcelain)" ]; then
-            git config --global user.name 'github-actions[bot]'
-            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-            git add jobs.html
-            git commit -m "🤖 Automated: Updated jobs section from ET RSS feed"
-            git push
-          else
-            echo "No changes detected. Skipping commit."
+    if [ -n "$(git status --porcelain)" ]; then
+      git config --global user.name 'github-actions[bot]'
+      git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      git add "$CA_FILE"
+      git commit -m "🤖 Automated: Updated current affairs from ET RSS feed"
+      git push
+    else
+      echo "No changes detected. Skipping commit."
+    fi
