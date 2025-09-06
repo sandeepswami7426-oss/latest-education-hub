@@ -19,6 +19,10 @@ jobs:
 
           LATEST_NEWS=$(curl -s "$FEED_URL" | grep -E '<title>|<link>' | sed -e 's/<!\[CDATA\[//g' -e 's/\]\]>//g' | head -n 20)
 
+          echo "----- RSS Feed Output -----"
+          echo "$LATEST_NEWS"
+          echo "---------------------------"
+
           NEW_ARTICLES=""
           while read -r title_line && read -r link_line; do
             TITLE=$(echo "$title_line" | sed -e 's/<title>//' -e 's/<\/title>//')
@@ -34,11 +38,16 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          if ! git diff --quiet; then
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+          echo "Git status before commit:"
+          git status
+
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
             git add current-affairs.html
-            git commit -m "🤖 Automated: Updated latest current affairs from ET RSS feed"
+            git commit -m "🤖 Automated: Updated current affairs from ET RSS feed"
             git push
           else
-            echo "No new current affairs found. No changes to commit."
+            echo "No changes detected. Skipping commit."
