@@ -8,49 +8,52 @@ on:
 jobs:
   update-homepage:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Update index.html with latest posts and static sections
-        run: |
-          # Confirm required files exist
-          if [ ! -f "education.html" ] || [ ! -f "jobs.html" ] || [ ! -f "current-affairs.html" ]; then
-            echo "One or more source files not found. Exiting."
-            exit 1
-          fi
+    - name: Fetch RSS feeds
+      run: |
+        curl -s https://www.jagranjosh.com/rss/education.xml -o education.xml
+        curl -s https://www.jagranjosh.com/rss/jobs.xml -o jobs.xml
+        curl -s https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml -o current.xml
 
-          # Extract latest <article> from each auto-updated file
-          LATEST_EDUCATION=$(grep -o '<article>.*</article>' education.html | head -n 1)
-          LATEST_JOB=$(grep -o '<article>.*</article>' jobs.html | head -n 1)
-          LATEST_CURRENT=$(grep -o '<article>.*</article>' current-affairs.html | head -n 1)
+    - name: Extract headlines
+      run: |
+        EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '2p')
+        JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '2p')
+        CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '2p')
+        echo "EDU=$EDU" >> $GITHUB_ENV
+        echo "JOB=$JOB" >> $GITHUB_ENV
+        echo "CUR=$CUR" >> $GITHUB_ENV
 
-          # Prepare static sections
-          RESULTS_SECTION="<section id='results' class='card'><h2>Results</h2><article><h4>परीक्षा परिणाम</h4><p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
-          QUIZZES_SECTION="<section id='quizzes' class='card'><h2>Quizzes</h2><article><h4>डेली क्विज़</h4><p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
+    - name: Build homepage content
+      run: |
+        RESULTS_SECTION="<section id='results' class='card'><h2>📊 Results</h2><article><h4>परीक्षा परिणाम</h4><p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
+        QUIZZES_SECTION="<section id='quizzes' class='card'><h2>🧠 Quizzes</h2><article><h4>डेली क्विज़</h4><p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
 
-          # Combine all sections into homepage content
-          NEW_CONTENT="<main>"
-          NEW_CONTENT+="<h2>ताज़ा खबरें और अपडेट्स</h2>"
-          NEW_CONTENT+="<section id='education' class='card'><h2>Education News</h2>${LATEST_EDUCATION}<a href='education.html' class='full-page-btn'>सभी एजुकेशन न्यूज़ देखें</a></section>"
-          NEW_CONTENT+="<section id='jobs' class='card'><h2>Latest Jobs</h2>${LATEST_JOB}<a href='jobs.html' class='full-page-btn'>सभी लेटेस्ट जॉब्स देखें</a></section>"
-          NEW_CONTENT+="<section id='current-affairs' class='card'><h2>Current Affairs</h2>${LATEST_CURRENT}<a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
-          NEW_CONTENT+="${RESULTS_SECTION}"
-          NEW_CONTENT+="${QUIZZES_SECTION}"
-          NEW_CONTENT+="</main>"
+        NEW_CONTENT="<main>"
+        NEW_CONTENT+="<h2>🔔 ताज़ा खबरें और अपडेट्स</h2>"
+        NEW_CONTENT+="<section id='education' class='card'><h2>🎓 Education News</h2><article><p>${EDU}</p></article><a href='education.html' class='full-page-btn'>सभी एजुकेशन न्यूज़ देखें</a></section>"
+        NEW_CONTENT+="<section id='jobs' class='card'><h2>💼 Latest Jobs</h2><article><p>${JOB}</p></article><a href='jobs.html' class='full-page-btn'>सभी लेटेस्ट जॉब्स देखें</a></section>"
+        NEW_CONTENT+="<section id='current-affairs' class='card'><h2>📰 Current Affairs</h2><article><p>${CUR}</p></article><a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
+        NEW_CONTENT+="${RESULTS_SECTION}"
+        NEW_CONTENT+="${QUIZZES_SECTION}"
+        NEW_CONTENT+="</main>"
 
-          # Replace <main> block in index.html
-          sed -i '/<main>/,/<\/main>/c\'"$NEW_CONTENT"'' index.html
+        sed -i '/<main>/,/<\/main>/c\'"$NEW_CONTENT"'' index.html
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          if ! git diff --quiet; then
-            git add index.html
-            git commit -m "🤖 Automated: Updated homepage with all 6 sections"
-            git push
-          else
-            echo "Homepage is already up to date."
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        if ! git diff --quiet; then
+          git add index.html
+          git commit -m "🤖 Homepage Updated: $EDU | $JOB | $CUR"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push
+        else
+          echo "✅ Homepage already up to date."
