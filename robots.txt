@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sandeepswami7426-oss.github.io/latest-education-hub/sitemap.xml
