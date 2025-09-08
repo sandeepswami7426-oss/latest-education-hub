@@ -21,22 +21,35 @@ jobs:
         curl -s https://www.jagranjosh.com/rss/jobs.xml -o jobs.xml
         curl -s https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml -o current.xml
 
-    - name: Extract headlines
+    - name: Extract headlines with fallback
       run: |
         EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '2p')
         JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '2p')
         CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '2p')
+
+        [ -z "$EDU" ] && EDU="⚠️ कोई एजुकेशन हेडलाइन नहीं मिली"
+        [ -z "$JOB" ] && JOB="⚠️ कोई जॉब हेडलाइन नहीं मिली"
+        [ -z "$CUR" ] && CUR="⚠️ कोई करेंट अफेयर्स हेडलाइन नहीं मिली"
+
         echo "EDU=$EDU" >> $GITHUB_ENV
         echo "JOB=$JOB" >> $GITHUB_ENV
         echo "CUR=$CUR" >> $GITHUB_ENV
 
-    - name: Build homepage content
+        echo "📚 Education: $EDU"
+        echo "💼 Jobs: $JOB"
+        echo "📰 Current Affairs: $CUR"
+
+    - name: Build homepage content and update timestamp
       run: |
         RESULTS_SECTION="<section id='results' class='card'><h2>📊 Results</h2><article><h4>परीक्षा परिणाम</h4><p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
         QUIZZES_SECTION="<section id='quizzes' class='card'><h2>🧠 Quizzes</h2><article><h4>डेली क्विज़</h4><p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
 
+        DATE=$(date +"%d %B %Y, %I:%M %p")
+        TIMESTAMP="<p style='font-size: 0.9em; color: gray;'>🔄 अंतिम अपडेट: $DATE</p>"
+
         NEW_CONTENT="<main>"
         NEW_CONTENT+="<h2>🔔 ताज़ा खबरें और अपडेट्स</h2>"
+        NEW_CONTENT+="$TIMESTAMP"
         NEW_CONTENT+="<section id='education' class='card'><h2>🎓 Education News</h2><article><p>${EDU}</p></article><a href='education.html' class='full-page-btn'>सभी एजुकेशन न्यूज़ देखें</a></section>"
         NEW_CONTENT+="<section id='jobs' class='card'><h2>💼 Latest Jobs</h2><article><p>${JOB}</p></article><a href='jobs.html' class='full-page-btn'>सभी लेटेस्ट जॉब्स देखें</a></section>"
         NEW_CONTENT+="<section id='current-affairs' class='card'><h2>📰 Current Affairs</h2><article><p>${CUR}</p></article><a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
@@ -44,16 +57,26 @@ jobs:
         NEW_CONTENT+="${QUIZZES_SECTION}"
         NEW_CONTENT+="</main>"
 
+        # Replace <main> block safely
         sed -i '/<main>/,/<\/main>/c\'"$NEW_CONTENT"'' index.html
+
+        echo "✅ Homepage rebuilt with latest content and timestamp: $DATE"
 
     - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        if ! git diff --quiet; then
-          git add index.html
-          git commit -m "🤖 Homepage Updated: $EDU | $JOB | $CUR"
+
+        echo "📌 Staging all modified files..."
+        git add index.html
+
+        if git diff --cached --quiet; then
+          echo "✅ Homepage already up to date. No commit needed."
+        else
+          COMMIT_MSG="🤖 Homepage Updated: $EDU | $JOB | $CUR"
+          echo "✅ Committing with message: $COMMIT_MSG"
+          git commit -m "$COMMIT_MSG"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push
-        else
-          echo "✅ Homepage already up to date."
+          echo "🎉 Push successful!"
+        fi
