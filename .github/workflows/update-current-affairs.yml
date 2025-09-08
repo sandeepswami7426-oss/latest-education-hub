@@ -1,16 +1,48 @@
-- name: Commit and push changes
-  run: |
-    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+name: Update Current Affairs
 
-    echo "Git status before commit:"
-    git status
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
 
-    if [ -n "$(git status --porcelain)" ]; then
-      git config --global user.name 'github-actions[bot]'
-      git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      git add "$CA_FILE"
-      git commit -m "🤖 Automated: Updated current affairs from ET RSS feed"
-      git push
-    else
-      echo "No changes detected. Skipping commit."
-    fi
+jobs:
+  update-current-affairs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Fetch RSS feed
+      run: |
+        curl -s https://example.com/rss.xml -o rss.xml
+
+    - name: Extract headline from RSS
+      run: |
+        HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
+        echo "📰 Extracted headline: $HEADLINE"
+
+    - name: Inject headline into index.html
+      run: |
+        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='current-affairs.html'>विस्तार से पढ़ें...</a></p>" index.html
+
+    - name: Commit and push changes
+      run: |
+        echo "🔧 Setting up Git identity..."
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+        echo "📌 Staging all modified files..."
+        git add -A
+
+        if git diff --cached --quiet; then
+          echo "🚫 No staged changes. Skipping commit."
+        else
+          COMMIT_MSG="🤖 Automated: $HEADLINE"
+          echo "✅ Committing with message: $COMMIT_MSG"
+          git commit -m "$COMMIT_MSG"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push
+          echo "🎉 Push successful!"
+        fi
