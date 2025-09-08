@@ -1,0 +1,38 @@
+name: Refresh Sitemap Lastmod
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # हर 6 घंटे में चलेगा
+  workflow_dispatch:
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Update <lastmod> tags in sitemap.xml
+      run: |
+        DATE=$(date +"%Y-%m-%dT%H:%M:%S%z")
+        sed -i "s|<lastmod>.*</lastmod>|<lastmod>$DATE</lastmod>|g" sitemap.xml
+        echo "🗂️ Updated all <lastmod> tags to: $DATE"
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+        git add sitemap.xml
+
+        if git diff --cached --quiet; then
+          echo "✅ Sitemap already up to date. No commit needed."
+        else
+          COMMIT_MSG="🗓️ Sitemap Lastmod Updated: $DATE"
+          echo "✅ Committing with message: $COMMIT_MSG"
+          git commit -m "$COMMIT_MSG"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push
+          echo "🎉 Push successful!"
+        fi
