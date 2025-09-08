@@ -20,12 +20,22 @@ jobs:
     - name: Extract headline from RSS
       run: |
         HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        if [ -z "$HEADLINE" ]; then
+          HEADLINE="⚠️ कोई हेडलाइन नहीं मिली"
+        fi
         echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
         echo "📰 Extracted headline: $HEADLINE"
 
-    - name: Inject headline into index.html
+    - name: Update index.html with headline and timestamp
       run: |
+        # Inject headline below placeholder
         sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='current-affairs.html'>विस्तार से पढ़ें...</a></p>" index.html
+
+        # Update timestamp line
+        DATE=$(date +"%d %B %Y, %I:%M %p")
+        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
+
+        echo "✅ Injection complete. Timestamp: $DATE"
 
     - name: Commit and push changes
       run: |
