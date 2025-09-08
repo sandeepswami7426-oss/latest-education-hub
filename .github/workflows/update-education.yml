@@ -2,7 +2,7 @@ name: Update Education News
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *'  # हर 6 घंटे में चलेगा
   workflow_dispatch:
 
 jobs:
@@ -20,21 +20,38 @@ jobs:
     - name: Extract headline
       run: |
         HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        if [ -z "$HEADLINE" ]; then
+          HEADLINE="⚠️ कोई एजुकेशन हेडलाइन नहीं मिली"
+        fi
         echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
+        echo "📚 Extracted headline: $HEADLINE"
 
-    - name: Inject into index.html
+    - name: Inject headline and update timestamp
       run: |
+        # Inject headline below placeholder
         sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='education.html'>विस्तार से पढ़ें...</a></p>" index.html
+
+        # Update timestamp line
+        DATE=$(date +"%d %B %Y, %I:%M %p")
+        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
+
+        echo "✅ Injection complete. Timestamp: $DATE"
 
     - name: Commit and push
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+        echo "📌 Staging all modified files..."
         git add -A
+
         if git diff --cached --quiet; then
-          echo "🚫 No changes."
+          echo "🚫 No changes. Skipping commit."
         else
-          git commit -m "📚 Education Update: $HEADLINE"
+          COMMIT_MSG="📚 Education Update: $HEADLINE"
+          echo "✅ Committing with message: $COMMIT_MSG"
+          git commit -m "$COMMIT_MSG"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push
+          echo "🎉 Push successful!"
         fi
