@@ -2,7 +2,7 @@ name: Update Latest Jobs
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *'  # हर 6 घंटे में चलेगा
   workflow_dispatch:
 
 jobs:
@@ -17,24 +17,41 @@ jobs:
       run: |
         curl -s https://www.jagranjosh.com/rss/jobs.xml -o rss.xml
 
-    - name: Extract headline
+    - name: Extract headline with fallback
       run: |
         HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        if [ -z "$HEADLINE" ]; then
+          HEADLINE="⚠️ कोई जॉब हेडलाइन नहीं मिली"
+        fi
         echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
+        echo "💼 Extracted headline: $HEADLINE"
 
-    - name: Inject into index.html
+    - name: Inject headline and update timestamp
       run: |
+        # Inject headline below placeholder
         sed -i "/<!--JOBS_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='jobs.html'>विस्तार से पढ़ें...</a></p>" index.html
 
-    - name: Commit and push
+        # Update timestamp line
+        DATE=$(date +"%d %B %Y, %I:%M %p")
+        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
+
+        echo "✅ Injection complete. Timestamp: $DATE"
+
+    - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add -A
+
+        echo "📌 Staging all modified files..."
+        git add index.html
+
         if git diff --cached --quiet; then
-          echo "🚫 No changes."
+          echo "✅ No changes detected. Skipping commit."
         else
-          git commit -m "💼 Jobs Update: $HEADLINE"
+          COMMIT_MSG="💼 Jobs Update: $HEADLINE"
+          echo "✅ Committing with message: $COMMIT_MSG"
+          git commit -m "$COMMIT_MSG"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push
+          echo "🎉 Push successful!"
         fi
