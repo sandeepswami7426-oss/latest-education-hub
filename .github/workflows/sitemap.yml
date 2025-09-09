@@ -13,17 +13,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Update lastmod in sitemap.xml
+    - name: Update <lastmod> timestamps in sitemap.xml
       run: |
-        # 🕒 Generate current IST timestamp
+        # 🕒 Generate current IST timestamp in sitemap format
         NOW=$(date +"%Y-%m-%dT%H:%M:%S+05:30")
 
-        # 🔧 Replace all <lastmod> values
+        # 🔧 Replace all <lastmod> values with current timestamp
         sed -i "s|<lastmod>.*</lastmod>|<lastmod>$NOW</lastmod>|g" sitemap.xml
 
         echo "🗺️ Sitemap updated with lastmod: $NOW"
 
-    - name: Commit and push sitemap
+    - name: Commit and push sitemap changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
