@@ -1,65 +1,13 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latest Jobs - Education Hub</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f9; margin: 0; padding-bottom: 60px; }
-    header { background: #2196F3; color: white; padding: 15px; text-align: center; }
-    nav { padding: 15px; background: #f0f0f0; border-bottom: 1px solid #ddd; white-space: nowrap; overflow-x: auto; text-align: center; }
-    nav a { margin: 0 10px; color: #333; text-decoration: none; font-weight: bold; font-size: 14px; }
-    footer { background: #222; color: white; padding: 10px; position: fixed; bottom: 0; width: 100%; font-size: 12px; text-align: center; }
-    main { padding: 10px; }
-    .card { background: white; border: 1px solid #ddd; padding: 15px; margin: 20px 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .card h2 { border-bottom: 2px solid #2196F3; padding-bottom: 10px; margin-top: 0; font-size: 20px; }
-    .card article { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-    .card article:last-child { border-bottom: none; }
-    .card h4 { margin: 0 0 5px 0; }
-    .card p { margin: 0; }
-    .read-more-btn { color: #2196F3; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 10px; }
-  </style>
-</head>
-<body>
-  <header>
-    <a href="index.html">
-      <img src="images/logo.png" alt="Latest Education Hub Logo" style="height: 60px;">
-    </a>
-  </header>
+# 🔍 Extract job headline and link from RSS
+JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '2p')
+LINK=$(grep -oP '(?<=<link>).*?(?=</link>)' jobs.xml | sed -n '2p')
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="education.html">Education</a>
-    <a href="jobs.html">Jobs</a>
-    <a href="results.html">Results</a>
-    <a href="current-affairs.html">Current Affairs</a>
-    <a href="quizzes.html">Quizzes</a>
-  </nav>
+# 🛡️ Fallbacks if data is missing
+[ -z "$JOB" ] && JOB="⚠️ कोई जॉब हेडलाइन नहीं मिली"
+[ -z "$LINK" ] && LINK="#"
 
-  <main>
-    <section class="card">
-      <h2>All Latest Jobs</h2>
+# 🧱 Build HTML block
+INJECT="<article><h4>$JOB</h4><p>यह जानकारी JagranJosh से ली गई है।</p><a href='$LINK' target='_blank' class='read-more-btn'>पूरी जानकारी पढ़ें...</a></article>"
 
-      <!--JOBS_NEWS_PLACEHOLDER-->
-
-      <article>
-        <h4>SSC CGL 2024 भर्ती शुरू</h4>
-        <p>कर्मचारी चयन आयोग ने CGL 2024 के लिए आवेदन प्रक्रिया शुरू कर दी है।</p>
-        <a href="#" target="_blank" class="read-more-btn">पूरी जानकारी पढ़ें...</a>
-      </article>
-
-      <article>
-        <h4>रेलवे भर्ती बोर्ड ने नई वैकेंसी जारी की</h4>
-        <p>RRB ने ग्रुप D और NTPC पदों के लिए नई भर्ती अधिसूचना जारी की है।</p>
-        <a href="#" target="_blank" class="read-more-btn">पूरी जानकारी पढ़ें...</a>
-      </article>
-
-      <!-- यहाँ और नौकरियाँ जोड़ें -->
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2025 Latest Education Hub</p>
-  </footer>
-</body>
-</html>
+# 📌 Inject below placeholder safely
+sed -i "/<!--JOBS_NEWS_PLACEHOLDER-->/a $INJECT" jobs.html
