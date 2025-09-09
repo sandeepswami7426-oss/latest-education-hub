@@ -31,36 +31,27 @@ jobs:
         [ -z "$JOB" ] && JOB="⚠️ कोई जॉब हेडलाइन नहीं मिली"
         [ -z "$CUR" ] && CUR="⚠️ कोई करेंट अफेयर्स हेडलाइन नहीं मिली"
 
-        echo "EDU=$EDU" >> $GITHUB_ENV
-        echo "JOB=$JOB" >> $GITHUB_ENV
-        echo "CUR=$CUR" >> $GITHUB_ENV
-
         echo "📚 Education: $EDU"
         echo "💼 Jobs: $JOB"
         echo "📰 Current Affairs: $CUR"
 
-    - name: Build homepage content and update timestamp
+    - name: Inject content into index.html
       run: |
-        RESULTS_SECTION="<section id='results' class='card'><h2>📊 Results</h2><article><h4>परीक्षा परिणाम</h4><p>नए रिजल्ट्स यहाँ अपडेट किए जाएंगे।</p><a href='results.html' class='read-more-btn'>सभी रिजल्ट्स देखें...</a></article></section>"
-        QUIZZES_SECTION="<section id='quizzes' class='card'><h2>🧠 Quizzes</h2><article><h4>डेली क्विज़</h4><p>तैयारी के लिए क्विज़ यहाँ अपडेट होंगे।</p><a href='quizzes.html' class='read-more-btn'>क्विज़ शुरू करें...</a></article></section>"
+        # 🔍 Education
+        EDU_BLOCK="<details><summary>$EDU</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></p></details>"
+        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $EDU_BLOCK" index.html
 
+        # 🔍 Jobs
+        JOB_BLOCK="<details><summary>$JOB</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></p></details>"
+        sed -i "/<!--JOBS_PLACEHOLDER-->/a $JOB_BLOCK" index.html
+
+        # 🔍 Current Affairs
+        CUR_BLOCK="<details><summary>$CUR</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></p></details>"
+        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $CUR_BLOCK" index.html
+
+        # 🔄 Timestamp Update
         DATE=$(date +"%d %B %Y, %I:%M %p")
-        TIMESTAMP="<p style='font-size: 0.9em; color: gray;'>🔄 अंतिम अपडेट: $DATE</p>"
-
-        NEW_CONTENT="<main>"
-        NEW_CONTENT+="<h2>🔔 ताज़ा खबरें और अपडेट्स</h2>"
-        NEW_CONTENT+="$TIMESTAMP"
-        NEW_CONTENT+="<section id='education' class='card'><h2>🎓 Education News</h2><article><p>${EDU}</p></article><a href='education.html' class='full-page-btn'>सभी एजुकेशन न्यूज़ देखें</a></section>"
-        NEW_CONTENT+="<section id='jobs' class='card'><h2>💼 Latest Jobs</h2><article><p>${JOB}</p></article><a href='jobs.html' class='full-page-btn'>सभी लेटेस्ट जॉब्स देखें</a></section>"
-        NEW_CONTENT+="<section id='current-affairs' class='card'><h2>📰 Current Affairs</h2><article><p>${CUR}</p></article><a href='current-affairs.html' class='full-page-btn'>सभी करेंट अफेयर्स देखें</a></section>"
-        NEW_CONTENT+="${RESULTS_SECTION}"
-        NEW_CONTENT+="${QUIZZES_SECTION}"
-        NEW_CONTENT+="</main>"
-
-        # Replace <main> block safely
-        sed -i '/<main>/,/<\/main>/c\'"$NEW_CONTENT"'' index.html
-
-        echo "✅ Homepage rebuilt with latest content and timestamp: $DATE"
+        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
 
     - name: Commit and push changes
       run: |
