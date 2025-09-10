@@ -1,3 +1,6 @@
+permissions:
+  contents: write
+
 name: Update Homepage with All Sections
 
 on:
@@ -67,7 +70,6 @@ jobs:
           COMMIT_MSG="🤖 Homepage Updated: $EDU | $JOB | $CUR"
           echo "✅ Committing with message: $COMMIT_MSG"
           git commit -m "$COMMIT_MSG"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push
+          git push origin main
           echo "🎉 Push successful!"
         fi
