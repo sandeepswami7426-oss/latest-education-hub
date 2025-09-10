@@ -39,19 +39,15 @@ jobs:
 
     - name: Inject content into index.html
       run: |
-        # 🔍 Education
         EDU_BLOCK="<details><summary>$EDU</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
         sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $EDU_BLOCK" index.html
 
-        # 🔍 Jobs
         JOB_BLOCK="<details><summary>$JOB</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></details>"
         sed -i "/<!--JOBS_PLACEHOLDER-->/a $JOB_BLOCK" index.html
 
-        # 🔍 Current Affairs
         CUR_BLOCK="<details><summary>$CUR</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></details>"
         sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $CUR_BLOCK" index.html
 
-        # 🔄 Timestamp Update
         DATE=$(date +"%d %B %Y, %I:%M %p")
         sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
 
