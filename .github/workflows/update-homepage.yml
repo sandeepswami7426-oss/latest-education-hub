@@ -1,6 +1,3 @@
-permissions:
-  contents: write
-
 name: Update Homepage with All Sections
 
 on:
@@ -11,6 +8,8 @@ on:
 jobs:
   update-homepage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repository
