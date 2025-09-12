@@ -25,9 +25,9 @@ jobs:
 
     - name: Extract headlines with fallback
       run: |
-        EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '2p')
-        JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '2p')
-        CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '2p')
+        EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
+        JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
+        CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
 
         [ -z "$EDU" ] && EDU="⚠️ कोई एजुकेशन हेडलाइन नहीं मिली"
         [ -z "$JOB" ] && JOB="⚠️ कोई जॉब हेडलाइन नहीं मिली"
