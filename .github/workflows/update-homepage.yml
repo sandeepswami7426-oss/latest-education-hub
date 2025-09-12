@@ -23,20 +23,6 @@ jobs:
         curl -s https://www.jagranjosh.com/rss/jobs.xml -o jobs.xml
         curl -s https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml -o current.xml
 
-    - name: Extract headlines with fallback
-      run: |
-        EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
-        JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
-        CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
-
-        [ -z "$EDU" ] && EDU="⚠️ कोई एजुकेशन हेडलाइन नहीं मिली"
-        [ -z "$JOB" ] && JOB="⚠️ कोई जॉब हेडलाइन नहीं मिली"
-        [ -z "$CUR" ] && CUR="⚠️ कोई करेंट अफेयर्स हेडलाइन नहीं मिली"
-
-        echo "📚 Education: $EDU"
-        echo "💼 Jobs: $JOB"
-        echo "📰 Current Affairs: $CUR"
-
     - name: Clean old injected blocks
       run: |
         sed -i '/<!--EDUCATION_PLACEHOLDER-->/,/<!--JOBS_PLACEHOLDER-->/{
@@ -53,15 +39,25 @@ jobs:
 
     - name: Inject content into index.html
       run: |
-        EDU_BLOCK="<details><summary>$EDU</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
-        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $EDU_BLOCK" index.html
+        # 🔍 Education
+        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3,8p'); do
+          BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
+          sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $BLOCK" index.html
+        done
 
-        JOB_BLOCK="<details><summary>$JOB</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></details>"
-        sed -i "/<!--JOBS_PLACEHOLDER-->/a $JOB_BLOCK" index.html
+        # 🔍 Jobs
+        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3,8p'); do
+          BLOCK="<details><summary>$HEADLINE</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></details>"
+          sed -i "/<!--JOBS_PLACEHOLDER-->/a $BLOCK" index.html
+        done
 
-        CUR_BLOCK="<details><summary>$CUR</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></details>"
-        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $CUR_BLOCK" index.html
+        # 🔍 Current Affairs
+        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3,8p'); do
+          BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></details>"
+          sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $BLOCK" index.html
+        done
 
+        # 🔄 Timestamp Update
         DATE=$(date +"%d %B %Y, %I:%M %p")
         sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
 
@@ -76,7 +72,7 @@ jobs:
         if git diff --cached --quiet; then
           echo "✅ Homepage already up to date. No commit needed."
         else
-          COMMIT_MSG="🤖 Homepage Updated: $EDU | $JOB | $CUR"
+          COMMIT_MSG="🤖 Homepage Updated with 6 headlines per section"
           echo "✅ Committing with message: $COMMIT_MSG"
           git commit -m "$COMMIT_MSG"
           git push origin main
