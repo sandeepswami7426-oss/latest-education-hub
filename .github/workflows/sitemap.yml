@@ -3,27 +3,42 @@ name: Refresh Sitemap
 on:
   schedule:
     - cron: '15 * * * *'  # हर घंटे 15 मिनट पर ऑटोमैटिक चलेगा
-  workflow_dispatch:        # मैन्युअली भी चला सकता है
+  workflow_dispatch:
 
 jobs:
   update-sitemap:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-    - name: Update <lastmod> timestamps in sitemap.xml
+    - name: Generate sitemap.xml if missing
       run: |
-        # 🕒 Generate current IST timestamp in sitemap format
+        if [ ! -f sitemap.xml ]; then
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > sitemap.xml
+          echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/education.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/jobs.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/current-affairs.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/results.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/quizzes.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          echo "</urlset>" >> sitemap.xml
+          echo "🆕 Sitemap.xml created with default structure"
+        fi
+
+    - name: Update <lastmod> timestamps
+      run: |
         NOW=$(date +"%Y-%m-%dT%H:%M:%S+05:30")
-
-        # 🔧 Replace all <lastmod> values with current timestamp
         sed -i "s|<lastmod>.*</lastmod>|<lastmod>$NOW</lastmod>|g" sitemap.xml
-
         echo "🗺️ Sitemap updated with lastmod: $NOW"
 
-    - name: Commit and push sitemap changes
+    - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -33,6 +48,5 @@ jobs:
           echo "✅ Sitemap already up to date. No commit needed."
         else
           git commit -m "🗺️ Sitemap refreshed: $NOW"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push
+          git push origin main
           echo "🎉 Sitemap pushed successfully!"
