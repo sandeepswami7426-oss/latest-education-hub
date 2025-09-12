@@ -37,6 +37,20 @@ jobs:
         echo "💼 Jobs: $JOB"
         echo "📰 Current Affairs: $CUR"
 
+    - name: Clean old injected blocks
+      run: |
+        sed -i '/<!--EDUCATION_PLACEHOLDER-->/,/<!--JOBS_PLACEHOLDER-->/{
+          /<details>/,/<\/details>/d
+        }' index.html
+
+        sed -i '/<!--JOBS_PLACEHOLDER-->/,/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/{
+          /<details>/,/<\/details>/d
+        }' index.html
+
+        sed -i '/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/,/<!--RESULTS_PLACEHOLDER-->/{
+          /<details>/,/<\/details>/d
+        }' index.html
+
     - name: Inject content into index.html
       run: |
         EDU_BLOCK="<details><summary>$EDU</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
