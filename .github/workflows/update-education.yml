@@ -2,12 +2,14 @@ name: Update Education News
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # हर 6 घंटे में चलेगा
+    - cron: '0 */6 * * *'  # Runs every 6 hours
   workflow_dispatch:
 
 jobs:
   update-education:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repo
@@ -19,22 +21,24 @@ jobs:
 
     - name: Extract headline
       run: |
-        HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '3p')
         if [ -z "$HEADLINE" ]; then
-          HEADLINE="⚠️ कोई एजुकेशन हेडलाइन नहीं मिली"
+          HEADLINE="⚠️ No education headline found"
         fi
         echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
         echo "📚 Extracted headline: $HEADLINE"
 
-    - name: Inject headline and update timestamp
+    - name: Inject headline into index.html and education.html
       run: |
-        # Inject headline below placeholder
-        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='education.html'>विस्तार से पढ़ें...</a></p>" index.html
+        # Homepage injection
+        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <details><summary>$HEADLINE</summary><p>Source: JagranJosh</p><a href='education.html'>View More</a></p></details>" index.html
 
-        # Update timestamp line
+        # Sub-page injection
+        sed -i "/<!--EDUPAGEPLACEHOLDER-->/a <details><summary>$HEADLINE</summary><p>Source: JagranJosh</p></details>" education.html
+
+        # Update timestamp
         DATE=$(date +"%d %B %Y, %I:%M %p")
-        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
-
+        sed -i "s|🔄 Last Updated:.*|🔄 Last Updated: $DATE|" index.html
         echo "✅ Injection complete. Timestamp: $DATE"
 
     - name: Commit and push
@@ -42,16 +46,11 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-        echo "📌 Staging all modified files..."
-        git add -A
-
+        git add index.html education.html
         if git diff --cached --quiet; then
           echo "🚫 No changes. Skipping commit."
         else
           COMMIT_MSG="📚 Education Update: $HEADLINE"
-          echo "✅ Committing with message: $COMMIT_MSG"
           git commit -m "$COMMIT_MSG"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push
+          git push origin main
           echo "🎉 Push successful!"
-        fi
