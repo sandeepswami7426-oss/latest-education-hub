@@ -2,12 +2,14 @@ name: Update Current Affairs
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # हर 6 घंटे में चलेगा
+    - cron: '0 */6 * * *'  # Runs every 6 hours
   workflow_dispatch:
 
 jobs:
   update-current-affairs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repo
@@ -19,40 +21,36 @@ jobs:
 
     - name: Extract headline from RSS
       run: |
-        HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '2p')
+        HEADLINE=$(grep -oP '(?<=<title>).*?(?=</title>)' rss.xml | sed -n '3p')
         if [ -z "$HEADLINE" ]; then
-          HEADLINE="⚠️ कोई हेडलाइन नहीं मिली"
+          HEADLINE="⚠️ No headline found"
         fi
         echo "HEADLINE=$HEADLINE" >> $GITHUB_ENV
         echo "📰 Extracted headline: $HEADLINE"
 
-    - name: Update index.html with headline and timestamp
+    - name: Inject headline into index.html and current-affairs.html
       run: |
-        # Inject headline below placeholder
-        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <p>$HEADLINE<br><a href='current-affairs.html'>विस्तार से पढ़ें...</a></p>" index.html
+        # Homepage injection
+        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <details><summary>$HEADLINE</summary><p>Source: Hindustan Times</p><a href='current-affairs.html'>View More</a></p></details>" index.html
 
-        # Update timestamp line
+        # Sub-page injection
+        sed -i "/<!--CURPAGEPLACEHOLDER-->/a <details><summary>$HEADLINE</summary><p>Source: Hindustan Times</p></details>" current-affairs.html
+
+        # Update timestamp
         DATE=$(date +"%d %B %Y, %I:%M %p")
-        sed -i "s|🔄 अंतिम अपडेट:.*|🔄 अंतिम अपडेट: $DATE|" index.html
-
+        sed -i "s|🔄 Last Updated:.*|🔄 Last Updated: $DATE|" index.html
         echo "✅ Injection complete. Timestamp: $DATE"
 
     - name: Commit and push changes
       run: |
-        echo "🔧 Setting up Git identity..."
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-        echo "📌 Staging all modified files..."
-        git add -A
-
+        git add index.html current-affairs.html
         if git diff --cached --quiet; then
           echo "🚫 No staged changes. Skipping commit."
         else
-          COMMIT_MSG="🤖 Automated: $HEADLINE"
-          echo "✅ Committing with message: $COMMIT_MSG"
+          COMMIT_MSG="📰 Auto-update: $HEADLINE"
           git commit -m "$COMMIT_MSG"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push
+          git push origin main
           echo "🎉 Push successful!"
-        fi
