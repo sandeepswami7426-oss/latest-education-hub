@@ -1,10 +1,7 @@
 name: Refresh Sitemap
 
 on:
-  schedule:
-    - cron: '15 * * * *'  # Runs every hour at :15
   workflow_dispatch:
-
 jobs:
   update-sitemap:
     runs-on: ubuntu-latest
