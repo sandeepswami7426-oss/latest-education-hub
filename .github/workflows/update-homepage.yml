@@ -1,8 +1,6 @@
 name: Update Homepage with All Sections
 
 on:
-  schedule:
-    - cron: '5 * * * *'  # Runs every hour at :05
   workflow_dispatch:
 
 jobs:
