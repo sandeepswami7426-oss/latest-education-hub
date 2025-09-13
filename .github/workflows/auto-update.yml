@@ -1,0 +1,74 @@
+name: Auto Update All Sections
+
+on:
+  schedule:
+    - cron: '5 * * * *'  # हर घंटे 5 मिनट पर auto-run
+  workflow_dispatch:
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Fetch RSS feeds with fallback
+      run: |
+        curl -s --fail https://www.hindustantimes.com/feeds/rss/education/rssfeed.xml -o education.xml || echo "<rss><channel><title>Error</title></channel></rss>" > education.xml
+        curl -s --fail https://www.hindustantimes.com/feeds/rss/education/employment-news/rssfeed.xml -o jobs.xml || echo "<rss><channel><title>Error</title></channel></rss>" > jobs.xml
+        curl -s --fail https://www.hindustantimes.com/feeds/rss/education/competitive-exams/rssfeed.xml -o current.xml || echo "<rss><channel><title>Error</title></channel></rss>" > current.xml
+
+    - name: Clean old blocks
+      run: |
+        for FILE in index.html education.html jobs.html current-affairs.html results.html quizzes.html; do
+          sed -i '/<details>/,/<\/details>/d' $FILE
+        done
+
+    - name: Inject headlines into all pages
+      run: |
+        # Education
+        EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
+        [ -z "$EDU" ] && EDU="⚠️ No education headline found"
+        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <details><summary>$EDU</summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>" index.html
+        sed -i "/<!--EDUPAGEPLACEHOLDER-->/a <details><summary>$EDU</summary><p>Source: HT Education</p></details>" education.html
+
+        # Jobs
+        JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
+        [ -z "$JOB" ] && JOB="⚠️ No job headline found"
+        sed -i "/<!--JOBS_PLACEHOLDER-->/a <details><summary>$JOB</summary><p>Source: HT Employment News</p><a href='jobs.html'>View More</a></p></details>" index.html
+        sed -i "/<!--JOBSPAGEPLACEHOLDER-->/a <details><summary>$JOB</summary><p>Source: HT Employment News</p></details>" jobs.html
+
+        # Current Affairs
+        CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
+        [ -z "$CUR" ] && CUR="⚠️ No current affairs found"
+        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <details><summary>$CUR</summary><p>Source: HT Competitive Exams</p><a href='current-affairs.html'>View More</a></p></details>" index.html
+        sed -i "/<!--CURPAGEPLACEHOLDER-->/a <details><summary>$CUR</summary><p>Source: HT Competitive Exams</p></details>" current-affairs.html
+
+        # Static Results block
+        sed -i "/<!--RESULTS_PLACEHOLDER-->/a <details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p><a href='results.html'>View All</a></details>" index.html
+        sed -i "/<!--RESULTSPAGEPLACEHOLDER-->/a <details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p></details>" results.html
+
+        # Static Quiz block
+        sed -i "/<!--QUIZZES_PLACEHOLDER-->/a <details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p><a href='quizzes.html'>Play Now</a></details>" index.html
+        sed -i "/<!--QUIZZESPAGEPLACEHOLDER-->/a <details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p></details>" quizzes.html
+
+        # Timestamp
+        DATE=$(date +"%d %B %Y, %I:%M %p")
+        sed -i "s|🔄 Last Updated:.*|🔄 Last Updated: $DATE|" index.html
+
+    - name: Commit and push
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add .
+        if git diff --cached --quiet; then
+          echo "✅ No changes to commit."
+        else
+          git commit -m "🔄 Auto-updated all sections: $DATE"
+          git push origin main
+          echo "🎉 Push successful!"
