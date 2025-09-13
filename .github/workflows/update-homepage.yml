@@ -37,25 +37,52 @@ jobs:
           /<details>/,/<\/details>/d
         }' index.html
 
+        sed -i '/<!--RESULTS_PLACEHOLDER-->/,/<!--QUIZZES_PLACEHOLDER-->/{
+          /<details>/,/<\/details>/d
+        }' index.html
+
     - name: Inject content into index.html
       run: |
         # 🔍 Education
-        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3,8p'); do
-          BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
-          sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $BLOCK" index.html
-        done
+        EDU_HEADLINES=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3,$p')
+        if [ -z "$EDU_HEADLINES" ]; then
+          sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <details><summary>⚠️ कोई एजुकेशन खबर नहीं मिली</summary><p>RSS feed खाली है या अपडेट नहीं हुआ।</p></details>" index.html
+        else
+          for HEADLINE in $EDU_HEADLINES; do
+            BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर JagranJosh से ली गई है।</p><a href='education.html'>विस्तार से पढ़ें...</a></details>"
+            sed -i "/<!--EDUCATION_PLACEHOLDER-->/a $BLOCK" index.html
+          done
+        fi
 
         # 🔍 Jobs
-        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3,8p'); do
-          BLOCK="<details><summary>$HEADLINE</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></details>"
-          sed -i "/<!--JOBS_PLACEHOLDER-->/a $BLOCK" index.html
-        done
+        JOB_HEADLINES=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3,$p')
+        if [ -z "$JOB_HEADLINES" ]; then
+          sed -i "/<!--JOBS_PLACEHOLDER-->/a <details><summary>⚠️ कोई जॉब खबर नहीं मिली</summary><p>RSS feed खाली है या अपडेट नहीं हुआ।</p></details>" index.html
+        else
+          for HEADLINE in $JOB_HEADLINES; do
+            BLOCK="<details><summary>$HEADLINE</summary><p>यह जानकारी JagranJosh से ली गई है।</p><a href='jobs.html'>विस्तार से पढ़ें...</a></details>"
+            sed -i "/<!--JOBS_PLACEHOLDER-->/a $BLOCK" index.html
+          done
+        fi
 
         # 🔍 Current Affairs
-        for HEADLINE in $(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3,8p'); do
-          BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></details>"
-          sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $BLOCK" index.html
-        done
+        CUR_HEADLINES=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3,$p')
+        if [ -z "$CUR_HEADLINES" ]; then
+          sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <details><summary>⚠️ कोई करेंट अफेयर्स खबर नहीं मिली</summary><p>RSS feed खाली है या अपडेट नहीं हुआ।</p></details>" index.html
+        else
+          for HEADLINE in $CUR_HEADLINES; do
+            BLOCK="<details><summary>$HEADLINE</summary><p>यह खबर Hindustan Times से ली गई है।</p><a href='current-affairs.html'>विस्तार से पढ़ें...</a></details>"
+            sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a $BLOCK" index.html
+          done
+        fi
+
+        # 📊 Results Section (Static block)
+        RESULTS_BLOCK="<details><summary>📢 अभी के रिजल्ट्स</summary><p>UPSC, SSC, और अन्य परीक्षाओं के रिजल्ट्स जल्द अपडेट होंगे।</p><a href='results.html'>पूरा देखें</a></details>"
+        sed -i "/<!--RESULTS_PLACEHOLDER-->/a $RESULTS_BLOCK" index.html
+
+        # 🧠 Quizzes Section (Static block)
+        QUIZ_BLOCK="<details><summary>🧠 आज का क्विज़: करेंट अफेयर्स</summary><p>5 सवाल, 5 मिनट में — अपनी तैयारी जांचें!</p><a href='quizzes.html'>अभी खेलें</a></details>"
+        sed -i "/<!--QUIZZES_PLACEHOLDER-->/a $QUIZ_BLOCK" index.html
 
         # 🔄 Timestamp Update
         DATE=$(date +"%d %B %Y, %I:%M %p")
@@ -72,9 +99,8 @@ jobs:
         if git diff --cached --quiet; then
           echo "✅ Homepage already up to date. No commit needed."
         else
-          COMMIT_MSG="🤖 Homepage Updated with 6 headlines per section"
+          COMMIT_MSG="🤖 Homepage Updated: $DATE"
           echo "✅ Committing with message: $COMMIT_MSG"
           git commit -m "$COMMIT_MSG"
           git push origin main
           echo "🎉 Push successful!"
-        fi
