@@ -2,7 +2,7 @@ name: Refresh Sitemap
 
 on:
   schedule:
-    - cron: '15 * * * *'  # हर घंटे 15 मिनट पर ऑटोमैटिक चलेगा
+    - cron: '15 * * * *'  # Runs every hour at :15
   workflow_dispatch:
 
 jobs:
@@ -22,12 +22,9 @@ jobs:
         if [ ! -f sitemap.xml ]; then
           echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > sitemap.xml
           echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/education.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/jobs.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/current-affairs.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/results.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
-          echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/quizzes.html</loc><lastmod>2025-01-01T00:00:00+05:30</lastmod></url>" >> sitemap.xml
+          for PAGE in "" education jobs current-affairs results quizzes; do
+            echo "<url><loc>https://sandeepswami7426-oss.github.io/latest-education-hub/${PAGE}.html</loc><lastmod>$(date +"%Y-%m-%dT%H:%M:%S+05:30")</lastmod><changefreq>hourly</changefreq><priority>0.8</priority></url>" >> sitemap.xml
+          done
           echo "</urlset>" >> sitemap.xml
           echo "🆕 Sitemap.xml created with default structure"
         fi
