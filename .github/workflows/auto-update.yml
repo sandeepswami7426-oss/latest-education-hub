@@ -26,7 +26,7 @@ jobs:
     - name: Clean old blocks
       run: |
         for FILE in index.html education.html jobs.html current-affairs.html results.html quizzes.html; do
-          sed -i '/<details>/,/<\/details>/d' $FILE
+          sed -i '/<details>/,/<\/details>/d' "$FILE"
         done
 
     - name: Inject headlines into all pages
@@ -34,28 +34,38 @@ jobs:
         # Education
         EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
         [ -z "$EDU" ] && EDU="⚠️ No education headline found"
-        sed -i "/<!--EDUCATION_PLACEHOLDER-->/a <details><summary>$EDU</summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>" index.html
-        sed -i "/<!--EDUPAGEPLACEHOLDER-->/a <details><summary>$EDU</summary><p>Source: HT Education</p></details>" education.html
+        echo "<details><summary>$EDU</summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>" > temp-edu.html
+        sed -i "/<!--EDUCATION_PLACEHOLDER-->/r temp-edu.html" index.html
+        sed -i "/<!--EDUPAGEPLACEHOLDER-->/r temp-edu.html" education.html
+        rm temp-edu.html
 
         # Jobs
         JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
         [ -z "$JOB" ] && JOB="⚠️ No job headline found"
-        sed -i "/<!--JOBS_PLACEHOLDER-->/a <details><summary>$JOB</summary><p>Source: HT Employment News</p><a href='jobs.html'>View More</a></p></details>" index.html
-        sed -i "/<!--JOBSPAGEPLACEHOLDER-->/a <details><summary>$JOB</summary><p>Source: HT Employment News</p></details>" jobs.html
+        echo "<details><summary>$JOB</summary><p>Source: HT Employment News</p><a href='jobs.html'>View More</a></p></details>" > temp-job.html
+        sed -i "/<!--JOBS_PLACEHOLDER-->/r temp-job.html" index.html
+        sed -i "/<!--JOBSPAGEPLACEHOLDER-->/r temp-job.html" jobs.html
+        rm temp-job.html
 
         # Current Affairs
         CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
         [ -z "$CUR" ] && CUR="⚠️ No current affairs found"
-        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/a <details><summary>$CUR</summary><p>Source: HT Competitive Exams</p><a href='current-affairs.html'>View More</a></p></details>" index.html
-        sed -i "/<!--CURPAGEPLACEHOLDER-->/a <details><summary>$CUR</summary><p>Source: HT Competitive Exams</p></details>" current-affairs.html
+        echo "<details><summary>$CUR</summary><p>Source: HT Competitive Exams</p><a href='current-affairs.html'>View More</a></p></details>" > temp-cur.html
+        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/r temp-cur.html" index.html
+        sed -i "/<!--CURPAGEPLACEHOLDER-->/r temp-cur.html" current-affairs.html
+        rm temp-cur.html
 
         # Static Results block
-        sed -i "/<!--RESULTS_PLACEHOLDER-->/a <details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p><a href='results.html'>View All</a></details>" index.html
-        sed -i "/<!--RESULTSPAGEPLACEHOLDER-->/a <details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p></details>" results.html
+        echo "<details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p><a href='results.html'>View All</a></details>" > temp-results.html
+        sed -i "/<!--RESULTS_PLACEHOLDER-->/r temp-results.html" index.html
+        sed -i "/<!--RESULTSPAGEPLACEHOLDER-->/r temp-results.html" results.html
+        rm temp-results.html
 
         # Static Quiz block
-        sed -i "/<!--QUIZZES_PLACEHOLDER-->/a <details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p><a href='quizzes.html'>Play Now</a></details>" index.html
-        sed -i "/<!--QUIZZESPAGEPLACEHOLDER-->/a <details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p></details>" quizzes.html
+        echo "<details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p><a href='quizzes.html'>Play Now</a></details>" > temp-quiz.html
+        sed -i "/<!--QUIZZES_PLACEHOLDER-->/r temp-quiz.html" index.html
+        sed -i "/<!--QUIZZESPAGEPLACEHOLDER-->/r temp-quiz.html" quizzes.html
+        rm temp-quiz.html
 
         # Timestamp
         DATE=$(date +"%d %B %Y, %I:%M %p")
