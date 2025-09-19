@@ -29,23 +29,28 @@ jobs:
 
     - name: Inject homepage blocks
       run: |
+        export LANG=en_US.UTF-8
+
         EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
         [ -z "$EDU" ] && EDU="⚠️ No education headline found"
         echo "<details><summary>$EDU</summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>" > temp-edu.html
         sed -i "/<!--EDUCATION_PLACEHOLDER-->/r temp-edu.html" index.html
         rm temp-edu.html
+        echo "🧪 Injected EDU: $EDU"
 
         JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
         [ -z "$JOB" ] && JOB="⚠️ No job headline found"
         echo "<details><summary>$JOB</summary><p>Source: HT Employment News</p><a href='jobs.html'>View More</a></p></details>" > temp-job.html
         sed -i "/<!--JOBS_PLACEHOLDER-->/r temp-job.html" index.html
         rm temp-job.html
+        echo "🧪 Injected JOB: $JOB"
 
         CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
         [ -z "$CUR" ] && CUR="⚠️ No current affairs found"
         echo "<details><summary>$CUR</summary><p>Source: HT Competitive Exams</p><a href='current-affairs.html'>View More</a></p></details>" > temp-cur.html
         sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/r temp-cur.html" index.html
         rm temp-cur.html
+        echo "🧪 Injected CUR: $CUR"
 
         echo "<details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p><a href='results.html'>View All</a></details>" > temp-results.html
         sed -i "/<!--RESULTS_PLACEHOLDER-->/r temp-results.html" index.html
@@ -57,6 +62,7 @@ jobs:
 
         DATE=$(date +"%d %B %Y, %I:%M %p")
         sed -i "s|🔄 Last Updated:.*|🔄 Last Updated: $DATE|" index.html
+        echo "🕒 Updated timestamp: $DATE"
 
     - name: Commit and push
       run: |
@@ -66,3 +72,4 @@ jobs:
         git commit --allow-empty -m "🔄 Auto-updated homepage: $DATE"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         git push origin main
+        echo "🚀 Push successful!"
