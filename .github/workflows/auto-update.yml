@@ -30,36 +30,43 @@ jobs:
     - name: Inject homepage blocks
       run: |
         export LANG=en_US.UTF-8
+        export LC_ALL=en_US.UTF-8
 
+        # Education
         EDU=$(grep -oP '(?<=<title>).*?(?=</title>)' education.xml | sed -n '3p')
         [ -z "$EDU" ] && EDU="⚠️ No education headline found"
         echo "<details><summary>$EDU</summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>" > temp-edu.html
-        sed -i "/<!--EDUCATION_PLACEHOLDER-->/r temp-edu.html" index.html
+        grep -q "<!--EDUCATION_PLACEHOLDER-->" index.html && sed -i "/<!--EDUCATION_PLACEHOLDER-->/r temp-edu.html" index.html
         rm temp-edu.html
         echo "🧪 Injected EDU: $EDU"
 
+        # Jobs
         JOB=$(grep -oP '(?<=<title>).*?(?=</title>)' jobs.xml | sed -n '3p')
         [ -z "$JOB" ] && JOB="⚠️ No job headline found"
         echo "<details><summary>$JOB</summary><p>Source: HT Employment News</p><a href='jobs.html'>View More</a></p></details>" > temp-job.html
-        sed -i "/<!--JOBS_PLACEHOLDER-->/r temp-job.html" index.html
+        grep -q "<!--JOBS_PLACEHOLDER-->" index.html && sed -i "/<!--JOBS_PLACEHOLDER-->/r temp-job.html" index.html
         rm temp-job.html
         echo "🧪 Injected JOB: $JOB"
 
+        # Current Affairs
         CUR=$(grep -oP '(?<=<title>).*?(?=</title>)' current.xml | sed -n '3p')
         [ -z "$CUR" ] && CUR="⚠️ No current affairs found"
         echo "<details><summary>$CUR</summary><p>Source: HT Competitive Exams</p><a href='current-affairs.html'>View More</a></p></details>" > temp-cur.html
-        sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/r temp-cur.html" index.html
+        grep -q "<!--CURRENT_AFFAIRS_PLACEHOLDER-->" index.html && sed -i "/<!--CURRENT_AFFAIRS_PLACEHOLDER-->/r temp-cur.html" index.html
         rm temp-cur.html
         echo "🧪 Injected CUR: $CUR"
 
+        # Static Results block
         echo "<details><summary>📢 Latest Results</summary><p>UPSC, SSC, and other exam results will be updated soon.</p><a href='results.html'>View All</a></details>" > temp-results.html
-        sed -i "/<!--RESULTS_PLACEHOLDER-->/r temp-results.html" index.html
+        grep -q "<!--RESULTS_PLACEHOLDER-->" index.html && sed -i "/<!--RESULTS_PLACEHOLDER-->/r temp-results.html" index.html
         rm temp-results.html
 
+        # Static Quiz block
         echo "<details><summary>🧠 Today’s Quiz: Current Affairs</summary><p>5 questions in 5 minutes — test your preparation!</p><a href='quizzes.html'>Play Now</a></details>" > temp-quiz.html
-        sed -i "/<!--QUIZZES_PLACEHOLDER-->/r temp-quiz.html" index.html
+        grep -q "<!--QUIZZES_PLACEHOLDER-->" index.html && sed -i "/<!--QUIZZES_PLACEHOLDER-->/r temp-quiz.html" index.html
         rm temp-quiz.html
 
+        # Timestamp
         DATE=$(date +"%d %B %Y, %I:%M %p")
         sed -i "s|🔄 Last Updated:.*|🔄 Last Updated: $DATE|" index.html
         echo "🕒 Updated timestamp: $DATE"
