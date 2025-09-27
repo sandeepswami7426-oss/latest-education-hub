@@ -1,10 +1,3 @@
 User-agent: *
 Allow: /
-
-# ✅ Sitemap for search engines
 Sitemap: https://sandeepswami7426-oss.github.io/latest-education-hub/sitemap.xml
-
-# ✅ Prevent crawling of GitHub-specific folders (if hosted via GitHub Pages)
-Disallow: /.github/
-Disallow: /README.md
-Disallow: /data.json
