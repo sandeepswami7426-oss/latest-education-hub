@@ -27,7 +27,7 @@
 <body>
   <!-- ✅ Logo Display on Homepage -->
   <div style="text-align: center; margin: 20px 0;">
-    <img src="images/logo.png" alt="Latest Education Hub Logo" style="max-width: 220px; border-radius: 8px;">
+    <img src="images/logo.png" alt="Latest Education Hub Logo" style="max-width: 220px; border-radius: 8px;" onerror="this.style.display='none'">
   </div>
 
   <main>
@@ -37,10 +37,21 @@
       <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">✅ Live Updated</span>
     </p>
 
-    <!-- ✅ Static Navigation Link -->
-    <p><a href="about.html">📘 About Us</a></p>
+    <!-- ✅ Static Navigation Links -->
+    <div style="margin: 15px 0;">
+      <a href="about.html" style="margin-right: 10px;">📘 About Us</a>
+      <a href="privacy.html" style="margin-right: 10px;">🔒 Privacy Policy</a>
+      <a href="contact.html">📩 Contact</a>
+    </div>
 
     <!-- ✅ Injection Container -->
     <section id="live-updates">
       <!--EDUCATION_PLACEHOLDER-->
-<details><summary><![CDATA[ICSI CSEET admit card for November 2025 session released at icsi.edu, download hall ticket via direct link here]]></summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>
+      <details><summary><![CDATA[ICSI CSEET admit card for November 2025 session released at icsi.edu, download hall ticket via direct link here]]></summary>
+        <p>Source: HT Education</p>
+        <a href='education.html'>View More</a>
+      </details>
+    </section>
+  </main>
+</body>
+</html>
