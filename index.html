@@ -1,97 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Latest Education Hub</title>
-
-  <!-- ✅ SEO & Social Preview Tags -->
   <meta name="description" content="Get the latest updates on government jobs, education news, exam results, and practice quizzes — all in one place.">
-  <meta property="og:title" content="Latest Education Hub">
-  <meta property="og:description" content="Get the latest updates on government jobs, education news, exam results, and practice quizzes — all in one place.">
-  <meta property="og:image" content="https://sandeepswami7426-oss.github.io/latest-education-hub/images/logo.png">
-  <meta property="og:url" content="https://sandeepswami7426-oss.github.io/latest-education-hub/">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Latest Education Hub">
-  <meta name="twitter:description" content="Get the latest updates on government jobs, education news, exam results, and practice quizzes — all in one place.">
-  <meta name="twitter:image" content="https://sandeepswami7426-oss.github.io/latest-education-hub/images/logo.png">
 
-  <!-- ✅ Favicon -->
-  <link rel="icon" href="images/logo.png" type="image/png">
+  <style>
+    :root{
+      --blue:#1861c6;
+      --muted:#6b7280;
+      --green:#28a745;
+      --card:#ffffff;
+      --logo-size:96px;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background:#ffffff;
+      color:#0b1720;
+      padding:20px;
+    }
+    main{ max-width:900px; margin:0 auto; }
 
-  <!-- ✅ Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+    /* Header */
+    .header { text-align:center; padding:22px 0 6px 0; }
+    .logo-circle{
+      width:var(--logo-size); height:var(--logo-size);
+      margin:0 auto 12px auto;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:999px;
+      border:2px solid rgba(24,97,198,0.12);
+      background:#fff;
+      box-shadow: 0 6px 18px rgba(24,97,198,0.06);
+      overflow:hidden;
+    }
+    .logo-circle img{ width:68%; height:68%; object-fit:contain; display:block; }
+
+    h1.site-title{
+      margin:0; font-size:32px; color:var(--blue); font-weight:700;
+      letter-spacing:0.2px;
+    }
+    .subtitle{ margin-top:6px; color:var(--muted); font-size:14px; }
+
+    /* Sections */
+    section{ margin:22px 0; }
+    h2{
+      margin:0 0 12px 0; font-size:20px; color:#0b2439;
+      display:flex; align-items:center; gap:10px;
+    }
+    .muted { color:var(--muted); font-size:0.95rem; }
+
+    /* Quick links */
+    .links p{ margin:10px 0; font-size:16px; color:var(--blue); }
+    .links a{ color:var(--blue); text-decoration:none; }
+    .links a:hover{text-decoration:underline;}
+
+    /* Details */
+    details > summary{ cursor:pointer; font-weight:600; margin-bottom:6px; }
+    details p{ margin:6px 0 0 0; color:var(--muted); }
+
+    /* AI box */
+    .ai-card{
+      background:#f8fbff;
+      border:1px solid rgba(3,102,214,0.06);
+      padding:14px;
+      border-radius:10px;
+    }
+    textarea{
+      width:100%;
+      min-height:92px;
+      padding:12px;
+      border-radius:8px;
+      border:1px solid #e6eefc;
+      resize:vertical;
+      font-family:inherit;
+      font-size:14px;
+    }
+    button.generate{
+      width:100%;
+      margin-top:12px;
+      background:linear-gradient(180deg,var(--blue),#0f4aa3);
+      color:#fff;
+      border:none;
+      padding:14px;
+      border-radius:10px;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(24,97,198,0.12);
+    }
+    pre#result{
+      margin-top:12px;
+      background:#fff;
+      border:1px solid #eef4ff;
+      padding:12px;
+      border-radius:8px;
+      white-space:pre-wrap;
+      font-family:Menlo,monospace;
+      color:#0b1720;
+    }
+
+    /* small helpers */
+    .badge-live{
+      display:inline-block;
+      background:var(--green); color:#fff;
+      padding:6px 10px; border-radius:8px; font-size:0.85rem; margin-left:10px;
+    }
+
+    /* Responsive */
+    @media (max-width:560px){
+      :root{ --logo-size:78px; }
+      h1.site-title{ font-size:22px; }
+      button.generate{ font-size:16px; padding:12px; }
+    }
+  </style>
 </head>
-
 <body>
-  <!-- ✅ Logo Display on Homepage -->
-  <div style="text-align: center; margin: 20px 0;">
-    <img src="images/logo.png" alt="Latest Education Hub Logo" style="max-width: 220px; border-radius: 8px;" onerror="this.style.display='none'">
-  </div>
-
   <main>
-    <h2>🔔 Latest News & Updates</h2>
-    <p style="font-size: 0.9em; color: gray;">
-      🔄 Last Updated: 02 November 2025, 06:28 AM
-      <span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em;">✅ Live Updated</span>
-    </p>
+    <!-- header with round logo -->
+    <header class="header">
+      <div class="logo-circle">
+        <!-- Replace this with your provided logo file (PNG/SVG). -->
+        <img src="images/logo.png" alt="Latest Education Hub Logo" onerror="this.style.display='none'">
+      </div>
+      <h1 class="site-title">Latest Education Hub</h1>
+      <div class="subtitle">Get the latest updates on govt jobs, exam results and quizzes</div>
+    </header>
 
-    <!-- ✅ Static Navigation Links -->
-    <div style="margin: 15px 0;">
-      <a href="about.html" style="margin-right: 10px;">📘 About Us</a>
-      <a href="privacy.html" style="margin-right: 10px;">🔒 Privacy Policy</a>
-      <a href="contact.html">📩 Contact</a>
-    </div>
-
-    <!-- ✅ Quick Access Section Links -->
-    <div style="margin: 20px 0;">
-      <p><a href="education.html">📘 View All Education Updates</a></p>
-      <p><a href="jobs.html">🏛️ View All Government Jobs</a></p>
-      <p><a href="current-affairs.html">🌐 View All Current Affairs</a></p>
-      <p><a href="results.html">📊 View All Results</a></p>
-      <p><a href="quizzes.html">🎮 Play All Quizzes</a></p>
-    </div>
-
-    <!-- ✅ Injection Container -->
-    <section id="live-updates">
-      <!--EDUCATION_PLACEHOLDER-->
-<details><summary><![CDATA[ICAI CA September Result 2025 on November 3; know credentials required, how to check scores at icai.nic.in]]></summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>
+    <!-- Latest News -->
+    <section>
+      <h2>🔔 Latest News & Updates</h2>
+      <p class="muted">⏱ Last Updated: 02 November 2025, 05:18 AM <span class="badge-live">✅ Live Updated</span></p>
     </section>
 
-    <!-- ✅ 🤖 AI Code Helper Section (Blackbox Style) -->
-    <section class="section" style="margin-top: 40px;">
+    <!-- Quick Links -->
+    <section class="links">
+      <h2>📘 Quick Links</h2>
+      <p>• <a href="education.html">Education Updates</a></p>
+      <p>• <a href="jobs.html">Government Jobs</a></p>
+      <p>• <a href="current-affairs.html">Current Affairs</a></p>
+      <p>• <a href="results.html">Results</a></p>
+      <p>• <a href="quizzes.html">Quizzes</a></p>
+    </section>
+
+    <!-- Recent Update -->
+    <section id="live-updates">
+      <h2>📰 Recent Update</h2>
+      <details>
+        <summary>ICAI CA September Result 2025 on November 3; how to check scores at icai.nic.in</summary>
+        <p>Source: HT Education</p>
+        <a href="education.html">View More</a>
+      </details>
+    </section>
+
+    <!-- AI Helper -->
+    <section>
       <h2>🤖 AI Code Helper</h2>
-      <p style="color: gray;">Ask coding questions or generate code instantly:</p>
-      <textarea id="prompt" placeholder="Type your coding question here..." style="width:100%;height:80px;border:1px solid #ccc;border-radius:6px;padding:8px;"></textarea><br><br>
-      <button onclick="generateCode()" style="background:#007bff;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;">Generate Code</button>
-      <pre id="result" style="background:#f8f8f8;padding:10px;border-radius:8px;margin-top:15px;white-space:pre-wrap;"></pre>
+      <div class="ai-card">
+        <p class="muted" style="margin:0 0 8px 0;">Ask coding questions or generate code instantly:</p>
+        <textarea id="prompt" placeholder="Type your coding question here..."></textarea>
+        <button class="generate" onclick="generateCode()">Generate Code</button>
+        <pre id="result" aria-live="polite"></pre>
+      </div>
     </section>
   </main>
 
-  <!-- ✅ AI Script -->
   <script>
-  async function generateCode() {
-    const prompt = document.getElementById('prompt').value;
-    const resultDiv = document.getElementById('result');
-    resultDiv.textContent = "Generating...";
-    
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer YOUR_API_KEY_HERE"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
+    async function generateCode(){
+      const prompt = document.getElementById('prompt').value.trim();
+      const out = document.getElementById('result');
+      if(!prompt){ out.textContent = "Please type a question."; return; }
+      out.textContent = "Generating…";
 
-    const data = await response.json();
-    resultDiv.textContent = data.choices[0].message.content;
-  }
+      try{
+        // NOTE: For production do NOT put your API key in client-side JS.
+        // Use a server-side proxy to hide the key. This is just a quick test example.
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_API_KEY_HERE"
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 600
+          })
+        });
+
+        const data = await res.json();
+        if(data?.choices && data.choices.length){
+          out.textContent = data.choices[0].message?.content ?? JSON.stringify(data, null, 2);
+        } else {
+          out.textContent = "No response — check API key / quota.";
+        }
+      } catch (err) {
+        out.textContent = "Error: " + err.message;
+      }
+    }
   </script>
-
 </body>
 </html>
