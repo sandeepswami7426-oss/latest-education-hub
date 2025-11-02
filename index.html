@@ -56,4 +56,46 @@
     <!-- ✅ Injection Container -->
     <section id="live-updates">
       <!--EDUCATION_PLACEHOLDER-->
-<details><summary><![CDATA[ICAI CA September Result 2025 on November 3; know credentials required, how to check scores at icai.nic.in]]></summary><p>Source: HT Education</p><a href='education.html'>View More</a></p></details>
+      <details>
+        <summary><![CDATA[ICAI CA September Result 2025 on November 3; know credentials required, how to check scores at icai.nic.in]]></summary>
+        <p>Source: HT Education</p>
+        <a href='education.html'>View More</a>
+      </details>
+    </section>
+
+    <!-- ✅ 🤖 AI Code Helper Section (Blackbox Style) -->
+    <section class="section" style="margin-top: 40px;">
+      <h2>🤖 AI Code Helper</h2>
+      <p style="color: gray;">Ask coding questions or generate code instantly:</p>
+      <textarea id="prompt" placeholder="Type your coding question here..." style="width:100%;height:80px;border:1px solid #ccc;border-radius:6px;padding:8px;"></textarea><br><br>
+      <button onclick="generateCode()" style="background:#007bff;color:white;padding:10px 20px;border:none;border-radius:5px;cursor:pointer;">Generate Code</button>
+      <pre id="result" style="background:#f8f8f8;padding:10px;border-radius:8px;margin-top:15px;white-space:pre-wrap;"></pre>
+    </section>
+  </main>
+
+  <!-- ✅ AI Script -->
+  <script>
+  async function generateCode() {
+    const prompt = document.getElementById('prompt').value;
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = "Generating...";
+    
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_API_KEY_HERE"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    resultDiv.textContent = data.choices[0].message.content;
+  }
+  </script>
+
+</body>
+</html>
