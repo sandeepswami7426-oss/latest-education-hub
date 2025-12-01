@@ -10,167 +10,499 @@
     :root{
       --blue:#1861c6;
       --muted:#6b7280;
-      --green:#28a745;
+      --green:#22c55e;
       --card:#ffffff;
+      --bg:#f3f4f6;
       --logo-size:96px;
-      --radius:12px;
+      --radius:14px;
     }
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
     body{
       margin:0;
       font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background:#ffffff;
+      background:var(--bg);
       color:#0b1720;
-      padding:20px;
     }
-    main{ max-width:900px; margin:0 auto; }
 
-    /* Header */
-    .header { text-align:center; padding:22px 0 6px 0; }
+    /* Top Bar / Navbar */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:#0f172a;
+      color:#e5e7eb;
+      box-shadow:0 2px 12px rgba(15,23,42,0.5);
+    }
+    .topbar-inner{
+      max-width:1000px;
+      margin:0 auto;
+      padding:10px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .topbar-logo{
+      font-size:15px;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+    .topbar-logo span{
+      display:inline-flex;
+      width:22px;
+      height:22px;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      background:#1d4ed8;
+      font-size:13px;
+    }
+    .topbar-nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .topbar-nav a{
+      font-size:12px;
+      color:#e5e7eb;
+      text-decoration:none;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid transparent;
+    }
+    .topbar-nav a:hover{
+      border-color:rgba(148,163,184,0.7);
+      background:rgba(15,23,42,0.8);
+    }
+
+    main{
+      max-width:1000px;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    /* Header / Hero */
+    .header-wrap{
+      background:linear-gradient(135deg,#ffffff,#e5f0ff);
+      border-radius:20px;
+      padding:18px 18px 20px 18px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.08);
+      border:1px solid rgba(148,163,184,0.3);
+      margin-bottom:18px;
+    }
+    .header{
+      text-align:center;
+    }
     .logo-circle{
       width:var(--logo-size); height:var(--logo-size);
-      margin:0 auto 12px auto;
+      margin:0 auto 10px auto;
       display:flex; align-items:center; justify-content:center;
       border-radius:999px;
       border:2px solid rgba(24,97,198,0.12);
       background:#fff;
-      box-shadow: 0 6px 18px rgba(24,97,198,0.06);
+      box-shadow: 0 6px 18px rgba(24,97,198,0.10);
       overflow:hidden;
     }
-    .logo-circle img{ width:68%; height:68%; object-fit:contain; display:block; }
+    .logo-circle img{
+      width:68%; height:68%; object-fit:contain; display:block;
+    }
 
     h1.site-title{
-      margin:0; font-size:32px; color:var(--blue); font-weight:700;
+      margin:0;
+      font-size:30px;
+      color:var(--blue);
+      font-weight:800;
       letter-spacing:0.2px;
     }
-    .subtitle{ margin-top:6px; color:var(--muted); font-size:14px; }
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .hero-badges{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+      font-size:12px;
+    }
+    .badge-soft{
+      padding:5px 10px;
+      border-radius:999px;
+      background:#e0edff;
+      color:#1d4ed8;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+    }
+    .badge-live{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      background:var(--green);
+      color:#fff;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:12px;
+    }
 
     /* Sections */
-    section{ margin:22px 0; }
+    section{ margin:18px 0; }
     h2{
-      margin:0 0 12px 0; font-size:20px; color:#0b2439;
-      display:flex; align-items:center; gap:10px;
+      margin:0 0 10px 0;
+      font-size:19px;
+      color:#0b2439;
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
-    .muted { color:var(--muted); font-size:0.95rem; }
+    .muted{
+      color:var(--muted);
+      font-size:0.9rem;
+    }
 
-    /* Quick links */
-    .links p{ margin:10px 0; font-size:16px; color:var(--blue); }
-    .links a{ color:var(--blue); text-decoration:none; }
+    /* Cards & layout */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:14px 14px 12px 14px;
+      box-shadow:0 4px 14px rgba(15,23,42,0.06);
+      border:1px solid rgba(148,163,184,0.25);
+    }
+    .card + .card{
+      margin-top:10px;
+    }
+    .flex-row{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .flex-col{
+      flex:1 1 260px;
+    }
+
+    /* Latest News list */
+    .updates-list{
+      list-style:none;
+      padding:0;
+      margin:10px 0 0 0;
+      font-size:0.9rem;
+    }
+    .updates-list li{
+      padding:6px 0;
+      border-bottom:1px dashed #e5e7eb;
+    }
+    .updates-list li:last-child{
+      border-bottom:none;
+    }
+    .tag{
+      display:inline-block;
+      font-size:11px;
+      padding:2px 6px;
+      border-radius:999px;
+      background:#eff6ff;
+      color:#1d4ed8;
+      margin-right:6px;
+    }
+    .time{
+      font-size:11px;
+      color:var(--muted);
+      margin-left:4px;
+    }
+
+    /* Quick Links */
+    .links p{
+      margin:8px 0;
+      font-size:15px;
+      color:var(--blue);
+    }
+    .links a{
+      color:var(--blue);
+      text-decoration:none;
+    }
     .links a:hover{text-decoration:underline;}
 
-    /* Details */
-    details > summary{ cursor:pointer; font-weight:600; margin-bottom:6px; }
-    details p{ margin:6px 0 0 0; color:var(--muted); }
+    /* Recent Update block */
+    .highlight-update{
+      font-size:0.92rem;
+      line-height:1.5;
+    }
+    .highlight-title{
+      font-weight:600;
+      margin-bottom:4px;
+    }
+
+    /* Details (FAQ style) */
+    details > summary{
+      cursor:pointer;
+      font-weight:600;
+      margin-bottom:6px;
+    }
+    details p{
+      margin:6px 0 0 0;
+      color:var(--muted);
+    }
 
     /* AI box */
     .ai-card{
-      background:#f8fbff;
-      border:1px solid rgba(3,102,214,0.06);
+      background:#0f172a;
+      border:1px solid rgba(15,23,42,0.7);
       padding:14px;
-      border-radius:10px;
+      border-radius:var(--radius);
+      color:#e5e7eb;
+    }
+    .ai-card h3{
+      margin:0 0 6px 0;
+      font-size:15px;
+    }
+    .ai-layout{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .ai-layout > div{
+      flex:1 1 260px;
     }
     textarea{
       width:100%;
       min-height:92px;
-      padding:12px;
-      border-radius:8px;
-      border:1px solid #e6eefc;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #1f2937;
       resize:vertical;
       font-family:inherit;
       font-size:14px;
+      background:#020617;
+      color:#e5e7eb;
+    }
+    textarea::placeholder{
+      color:#6b7280;
     }
     button.generate{
       width:100%;
-      margin-top:12px;
+      margin-top:10px;
       background:linear-gradient(180deg,var(--blue),#0f4aa3);
       color:#fff;
       border:none;
-      padding:14px;
+      padding:12px;
       border-radius:10px;
-      font-size:18px;
+      font-size:16px;
       cursor:pointer;
-      box-shadow: 0 6px 18px rgba(24,97,198,0.12);
+      box-shadow: 0 6px 18px rgba(24,97,198,0.30);
+    }
+    button.generate:hover{
+      filter:brightness(1.03);
     }
     pre#result{
-      margin-top:12px;
-      background:#fff;
-      border:1px solid #eef4ff;
-      padding:12px;
+      margin-top:10px;
+      background:#020617;
+      border:1px solid #1f2937;
+      padding:10px;
       border-radius:8px;
       white-space:pre-wrap;
       font-family:Menlo,monospace;
-      color:#0b1720;
+      color:#e5e7eb;
+      font-size:12px;
+      max-height:260px;
+      overflow:auto;
+    }
+    .ai-hint{
+      font-size:11px;
+      color:#9ca3af;
+      margin-top:4px;
     }
 
-    /* small helpers */
-    .badge-live{
-      display:inline-block;
-      background:var(--green); color:#fff;
-      padding:6px 10px; border-radius:8px; font-size:0.85rem; margin-left:10px;
+    /* Footer note */
+    .footer-note{
+      margin:20px 0 10px 0;
+      text-align:center;
+      font-size:11px;
+      color:#9ca3af;
     }
 
     /* Responsive */
     @media (max-width:560px){
       :root{ --logo-size:78px; }
-      h1.site-title{ font-size:22px; }
-      button.generate{ font-size:16px; padding:12px; }
+      main{ padding:12px; }
+      h1.site-title{ font-size:23px; }
+      .header-wrap{ padding:14px 12px 16px 12px; }
+      .topbar-inner{ padding:8px 10px; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <!-- header with round logo -->
-    <header class="header">
-      <div class="logo-circle">
-        <img src="images/logo.png" alt="Latest Education Hub Logo" onerror="this.style.display='none'">
+
+  <!-- Sticky Topbar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-logo">
+        <span>LE</span> Latest Education Hub
       </div>
-      <h1 class="site-title">Latest Education Hub</h1>
-      <div class="subtitle">Get the latest updates on govt jobs, exam results and quizzes</div>
-    </header>
+      <nav class="topbar-nav">
+        <a href="#latest">Latest</a>
+        <a href="#quick-links">Quick Links</a>
+        <a href="#recent">Recent Update</a>
+        <a href="#faq">FAQ</a>
+        <a href="#ai-helper">AI Helper</a>
+      </nav>
+    </div>
+  </div>
 
-    <!-- Latest News -->
-    <section>
-      <h2>🔔 Latest News & Updates</h2>
-      <p class="muted">⏱ Last Updated: 02 November 2025, 05:18 AM <span class="badge-live">✅ Live Updated</span></p>
-    </section>
+  <main>
+    <!-- Header / Hero -->
+    <div class="header-wrap">
+      <header class="header">
+        <div class="logo-circle">
+          <!-- apna logo file path yaha same rakho -->
+          <img src="images/logo.png" alt="Latest Education Hub Logo" onerror="this.style.display='none'">
+        </div>
+        <h1 class="site-title">Latest Education Hub</h1>
+        <div class="subtitle">Get the latest updates on govt jobs, exam results and quizzes</div>
+        <div class="hero-badges">
+          <span class="badge-soft">📚 Govt Jobs · Results · Current Affairs</span>
+          <span class="badge-live">✅ Live Updated</span>
+        </div>
+      </header>
+    </div>
 
-    <!-- Quick Links -->
-    <section class="links">
-      <h2>📘 Quick Links</h2>
-      <p>• <a href="education.html">Education Updates</a></p>
-      <p>• <a href="jobs.html">Government Jobs</a></p>
-      <p>• <a href="current-affairs.html">Current Affairs</a></p>
-      <p>• <a href="results.html">Results</a></p>
-      <p>• <a href="quizzes.html">Quizzes</a></p>
+    <!-- Top row: Latest News + Quick Links -->
+    <section id="latest">
+      <div class="flex-row">
+        <!-- Latest News -->
+        <div class="flex-col">
+          <div class="card">
+            <h2>🔔 Latest News & Updates</h2>
+            <p class="muted">
+              ⏱ Last Updated: 02 November 2025, 05:18 AM
+            </p>
+            <ul class="updates-list">
+              <!-- Ye items sirf example hai, tum apne hisaab se change kar sakte ho -->
+              <li>
+                <span class="tag">Govt Job</span>
+                SSC GD 2025 notification released – apply online from 10 Nov 2025
+                <span class="time">Updated 1 hr ago</span>
+              </li>
+              <li>
+                <span class="tag">Result</span>
+                Rajasthan Board 10th supplementary result declared
+                <span class="time">Updated 3 hrs ago</span>
+              </li>
+              <li>
+                <span class="tag">Current Affairs</span>
+                Daily MCQ quiz for 01–02 Nov 2025 uploaded
+                <span class="time">Today</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="flex-col" id="quick-links">
+          <div class="card links">
+            <h2>📘 Quick Links</h2>
+            <!-- Ye links tumhare original code se same rakhe -->
+            <p>• <a href="education.html">Education Updates</a></p>
+            <p>• <a href="jobs.html">Government Jobs</a></p>
+            <p>• <a href="current-affairs.html">Current Affairs</a></p>
+            <p>• <a href="results.html">Results</a></p>
+            <p>• <a href="quizzes.html">Quizzes</a></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Recent Update -->
-    <section id="live-updates">
-      <h2>📰 Recent Update</h2>
+    <section id="recent">
+      <div class="card">
+        <h2>📰 Recent Update</h2>
+        <div class="highlight-update">
+          <div class="highlight-title">New Govt Job Highlight (Demo)</div>
+          <p>
+            Example: “Rajasthan Police Constable 2025 – 3500 vacancies, online form start from
+            15 November 2025. Eligibility: 12th pass. Last date: 15 December 2025.”
+          </p>
+          <p class="muted" style="margin-top:4px;">
+            Note: Ye text sirf demo ke liye hai. Isme tum apna real latest update daal sakte ho.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ / Info -->
+    <section id="faq">
+      <div class="card">
+        <h2>❓ How to use this site?</h2>
+        <details>
+          <summary>Where can I see new government job notifications?</summary>
+          <p>“Government Jobs” page par jaake tum latest central & state level vacancies dekh sakte ho.</p>
+        </details>
+        <details>
+          <summary>Current affairs kaha milenge?</summary>
+          <p>“Current Affairs” page par daily, weekly & monthly current affairs content milega.</p>
+        </details>
+        <details>
+          <summary>Results & admit card updates?</summary>
+          <p>“Results” page me exam results, merit list & admit card ke direct links update hote rahenge.</p>
+        </details>
+      </div>
     </section>
 
     <!-- AI Helper -->
-    <section>
+    <section id="ai-helper">
       <h2>🤖 AI Code Helper</h2>
       <div class="ai-card">
-        <p class="muted" style="margin:0 0 8px 0;">Ask coding questions or generate code instantly:</p>
-        <textarea id="prompt" placeholder="Type your coding question here..."></textarea>
-        <button class="generate" onclick="generateCode()">Generate Code</button>
-        <pre id="result" aria-live="polite"></pre>
+        <div class="ai-layout">
+          <div>
+            <h3>Ask coding questions or generate code</h3>
+            <p class="muted" style="margin:0 0 8px 0; color:#9ca3af;">
+              Example: “Make a HTML page for SSC jobs list” ya “Write Python code for simple calculator”.
+            </p>
+            <p class="ai-hint">
+              IMPORTANT: Real OpenAI API key <b>kabhi bhi</b> is HTML/JS file me mat daalna.
+              Backend (server) bana ke waha key secure rakho, yahan sirf us backend ko call karo.
+            </p>
+          </div>
+          <div>
+            <textarea id="prompt" placeholder="Type your coding question here..."></textarea>
+            <button class="generate" onclick="generateCode()">Generate Code</button>
+            <pre id="result" aria-live="polite"></pre>
+          </div>
+        </div>
       </div>
     </section>
+
+    <div class="footer-note">
+      © <span id="year"></span> Latest Education Hub · Designed by Sandeep Swami<br>
+      <span style="font-size:10px;">Data should always be verified from official websites before applying.</span>
+    </div>
   </main>
 
   <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
     async function generateCode(){
       const prompt = document.getElementById('prompt').value.trim();
       const out = document.getElementById('result');
-      if(!prompt){ out.textContent = "Please type a question."; return; }
+      if(!prompt){
+        out.textContent = "Please type a question.";
+        return;
+      }
       out.textContent = "Generating…";
 
       try{
-        // NOTE: For production do NOT put your API key in client-side JS.
-        // Use a server-side proxy to hide the key. This is just a quick test example.
+        // ⚠ IMPORTANT:
+        // - Yaha real OpenAI API key mat likho.
+        // - Ek backend (Node / Python / PHP) banao jo OpenAI se baat kare,
+        //   aur yahan se us backend ka URL call karo.
         const res = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
           headers: {
